@@ -1,0 +1,132 @@
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif; /* Apply Roboto font to the entire webpage */
+    margin: 0;
+    padding: 0;
+    background-color: #CFE0C3;
+}
+
+html, body {
+    height: 100%; /* Set height to 100% of viewport height */
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Prevent scrolling */
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Header Styles */
+header {
+    background-color: #1F363D;
+    color: #CFE0C3;
+    padding: 20px;
+    margin-bottom: 60px;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px; /* Added padding to center the text */
+}
+
+.header-left {
+    flex: 1; /* Take up remaining space */
+}
+
+.header-right {
+    padding-left: 20px; /* Added padding between name and links */
+    padding-top: 10px; /* Adjusted padding for vertical centering */
+}
+
+header h1 {
+    margin: 0;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: #CFE0C3;
+    text-decoration: none;
+}
+
+/* Main Content Styles */
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+.content-columns {
+    display: flex;
+    justify-content: center; /* Center columns */
+}
+
+.column {
+    flex: 1;
+    padding: 0 10px; /* Added padding to center the columns */
+    display: flex;
+    flex-direction: column;
+}
+
+.column img {
+    max-width: 50%; /* Ensures the image doesn't exceed its container's width */
+    height: auto; /* Allows the image to maintain its aspect ratio */
+    margin: 0 auto; /* Center the image horizontally */
+}
+
+/* Footer Styles */
+footer {
+    background-color: #40798C;
+    color: #CFE0C3;
+    padding: 20px;
+    margin-top: 60px;
+}
+
+.footer-container {
+    display: flex;
+}
+
+.footer-column {
+    flex: 1;
+    display: flex;
+    flex-direction: row; /* Display divs horizontally */
+    align-items: center; /* Center items horizontally */
+}
+
+.footer-item {
+    flex-grow: 1;
+    margin-bottom: 20px; /* Add spacing between items */
+    text-align: center; /* Center text within each item */
+}
+
+.footer-item:last-child {
+    margin-right: 0; /* Remove right margin for the last item */
+}
+
+.footer-item p {
+    margin: 0;
+}
+
+/* Link Styles */
+a {
+    color: #9EC1A3; /* Default link color */
+    text-decoration: none;
+    transition: color 0.3s; /* Smooth transition for color change */
+}
+
+a:hover {
+    color: #70A9A1; /* Color when hovered over */
+}
+
+a:visited {
+    color: #9EC1A3; /* Color for visited links */
+}
