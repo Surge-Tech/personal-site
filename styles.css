@@ -9,7 +9,7 @@ body {
 }
 
 html, body {
-    height: 100%; /* Set height to 100% of viewport height */
+    height: 100vh; /* Set height to 100% of viewport height */
     margin: 0;
     padding: 0;
     overflow: hidden; /* Prevent scrolling */
@@ -23,7 +23,6 @@ header {
     background-color: #1F363D;
     color: #CFE0C3;
     padding: 20px;
-    margin-bottom: 40px;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3); /* Add drop shadow */
 }
 
@@ -64,6 +63,7 @@ nav ul li a {
 
 /* Main Content Styles */
 .main-content {
+    position: relative;
     flex-grow: 1;
     padding: 20px;
     overflow-y: auto; /* Allow scrolling within the main content if needed */
@@ -104,18 +104,22 @@ footer {
 }
 
 /* Link Styles */
-a {
+a:link {
     color: #9EC1A3; /* Default link color */
     text-decoration: none;
     transition: color 0.3s; /* Smooth transition for color change */
+}
+
+a:visited {
+    color: #9EC1A3; /* Color for visited links */
 }
 
 a:hover {
     color: #70A9A1; /* Color when hovered over */
 }
 
-a:visited {
-    color: #9EC1A3; /* Color for visited links */
+a:active {
+    color: white; /* Color when being clicked */
 }
 
 /* Font Styles */

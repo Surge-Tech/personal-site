@@ -1,7 +1,16 @@
 /* Main Content Styles */
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .content-columns {
     display: flex;
-    justify-content: center; /* Center columns */
+    max-width: 900px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
 }
 
 .column {
@@ -12,7 +21,13 @@
 }
 
 .column img {
-    max-width: 50%; /* Ensures the image doesn't exceed its container's width */
     height: auto; /* Allows the image to maintain its aspect ratio */
     margin: 0 auto; /* Center the image horizontally */
+
+
+}
+
+.about-me {
+    line-height: 25px;
+    margin-bottom: 20px;
 }

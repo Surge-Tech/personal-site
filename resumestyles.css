@@ -1,4 +1,8 @@
 /* Main Content Styles */
+.resume-section {
+    text-align: center;
+}
+
 .resume-section h3 {
     color: #40798C;
 }
