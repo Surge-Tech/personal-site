@@ -1,5 +1,22 @@
 @import url(https://fonts.googleapis.com/css2?family=Roboto);
 
+/* Font Styles */
+h1 {
+    font-size: 40px;
+}
+  
+h2 {
+    font-size: 30px;
+}
+
+h3 {
+    font-size: 23px;
+}
+
+p {
+    font-size: 18px;
+}
+
 /* General Styles */
 body {
     font-family: 'Roboto', sans-serif; /* Apply Roboto font to the entire webpage */
@@ -9,7 +26,7 @@ body {
 }
 
 html, body {
-    height: 100vh; /* Set height to 100% of viewport height */
+    height: 100%; /* Set height to 100% of viewport height */
     margin: 0;
     padding: 0;
     overflow: hidden; /* Prevent scrolling */
@@ -26,6 +43,14 @@ header {
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3); /* Add drop shadow */
 }
 
+header h1 a:link {
+    color: #CFE0C3;
+}
+
+header h1 a:visited {
+    color: #CFE0C3;
+}
+
 .header-container {
     display: flex;
     justify-content: space-between;
@@ -38,11 +63,31 @@ header {
 
 .header-right {
     padding-left: 20px; /* Added padding between name and links */
-    padding-top: 10px; /* Adjusted padding for vertical centering */
+    padding-top: 5px; /* Adjusted padding for vertical centering */
 }
 
 header h1 {
     margin: 0;
+    font-size: 24px;
+}
+
+/* Media Query for Smaller Screens */
+@media screen and (max-width: 768px) {
+    header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .header-container {
+        padding: 0px;
+        flex-direction: column;
+        align-items: center;
+    }
+    .header-right {
+        padding-left: 20px; /* Added padding between name and links */
+        padding-top: 10px; /* Adjusted padding for vertical centering */
+    }
 }
 
 nav ul {
@@ -122,4 +167,3 @@ a:active {
     color: white; /* Color when being clicked */
 }
 
-/* Font Styles */

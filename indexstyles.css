@@ -9,25 +9,39 @@
     display: flex;
     max-width: 900px;
     width: 100%;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
 }
 
 .column {
     flex: 1;
-    padding: 0 10px; /* Added padding to center the columns */
+    padding: 0px 10px; /* Added padding to center the columns */
     display: flex;
     flex-direction: column;
+    max-width: 100%;
+    border: 10px
 }
 
 .column img {
+    max-width: 100%;
     height: auto; /* Allows the image to maintain its aspect ratio */
     margin: 0 auto; /* Center the image horizontally */
-
-
+    margin-top: 20px;
 }
 
 .about-me {
     line-height: 25px;
     margin-bottom: 20px;
+}
+
+/* Media Query for Smaller Screens */
+@media screen and (max-width: 768px) {
+    .column {
+        flex-basis: 100%; /* Each column takes up full width on smaller screens */
+        text-align: center;
+    }
+    .content-columns {
+        margin-top: 20px;
+    }
 }
