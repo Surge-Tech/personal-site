@@ -21,7 +21,7 @@ header {
     background-color: #1F363D;
     color: #CFE0C3;
     padding: 20px;
-    margin-bottom: 60px;
+    margin-bottom: 40px;
 }
 
 .header-container {
@@ -63,24 +63,7 @@ nav ul li a {
 .main-content {
     flex-grow: 1;
     padding: 20px;
-}
-
-.content-columns {
-    display: flex;
-    justify-content: center; /* Center columns */
-}
-
-.column {
-    flex: 1;
-    padding: 0 10px; /* Added padding to center the columns */
-    display: flex;
-    flex-direction: column;
-}
-
-.column img {
-    max-width: 50%; /* Ensures the image doesn't exceed its container's width */
-    height: auto; /* Allows the image to maintain its aspect ratio */
-    margin: 0 auto; /* Center the image horizontally */
+    overflow-y: auto; /* Allow scrolling within the main content if needed */
 }
 
 /* Footer Styles */
@@ -88,7 +71,7 @@ footer {
     background-color: #40798C;
     color: #CFE0C3;
     padding: 20px;
-    margin-top: 60px;
+    margin-top: auto; /* Ensure the footer sticks to the bottom */
 }
 
 .footer-container {
@@ -104,7 +87,7 @@ footer {
 
 .footer-item {
     flex-grow: 1;
-    margin-bottom: 20px; /* Add spacing between items */
+    margin-bottom: 5px; /* Add spacing between items */
     text-align: center; /* Center text within each item */
 }
 

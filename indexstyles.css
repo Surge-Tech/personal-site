@@ -1,0 +1,18 @@
+/* Main Content Styles */
+.content-columns {
+    display: flex;
+    justify-content: center; /* Center columns */
+}
+
+.column {
+    flex: 1;
+    padding: 0 10px; /* Added padding to center the columns */
+    display: flex;
+    flex-direction: column;
+}
+
+.column img {
+    max-width: 50%; /* Ensures the image doesn't exceed its container's width */
+    height: auto; /* Allows the image to maintain its aspect ratio */
+    margin: 0 auto; /* Center the image horizontally */
+}
