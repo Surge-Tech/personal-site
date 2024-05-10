@@ -10,14 +10,14 @@ This repository contains the source code for the website. The website serves as 
 
 - **Home Page:** Provides an introduction to myself and includes links to additional pages such as Resume, Personal Life, and Portfolio.
 - **Resume Page:** Displays resume, including education, programming languages, and project links.
-- **Footer:** Consistent footer across all pages containing contact information and links to social media profiles.
+- **Personal Page:** Info about some of my personal interests and hobbies.
+- **Portfolio Page** Showing off some of my projects to demonstrate my knowledge.
 
 ## Technologies Used
 
 - HTML
 - CSS
 - Git
-- GitHub Pages
 
 ## Website
 

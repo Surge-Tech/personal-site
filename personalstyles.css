@@ -1,8 +1,12 @@
 /* Main Content Styles */
 .main-content {
     padding: 20px;
-    display: flex;
+    display: static;
     justify-content: center; /* Center main content horizontally */
+    flex-direction: column; /* Stack div elements vertically */
+    align-items: center; /* Center div elements horizontally */
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 /* Blog Post Styles */
@@ -12,7 +16,8 @@
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
     padding: 20px;
     margin-bottom: 20px;
-    margin-right: 20px;
+    margin-left: auto;
+    margin-right: auto;
     max-width: 600px; /* Limit width of blog posts */
 
 }
@@ -33,12 +38,21 @@
     margin-top: 10px; /* Add space between paragraph and image */
 }
 
-/* Media Query for Smaller Screens */
-@media screen and (max-width: 1920px) {
-    .main-content {
-        flex-direction: column; /* Stack div elements vertically */
-        align-items: center; /* Center div elements horizontally */
-        margin-top: auto;
-        margin-bottom: auto;;
-    }
+/* Link Styles */
+.blog-post a:link {
+    color: #70A9A1; /* Default link color */
+    text-decoration: none;
+    transition: color 0.3s; /* Smooth transition for color change */
+}
+
+.blog-post a:visited {
+    color: #70A9A1; /* Color for visited links */
+}
+
+.blog-post a:hover {
+    color: #40798C; /* Color when hovered over */
+}
+
+.blog-post a:active {
+    color: #CFE0C3; /* Color when being clicked */
 }

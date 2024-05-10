@@ -1,47 +1,41 @@
 /* Main Content Styles */
 .main-content {
-    display: flex;
+    display: static;
     justify-content: center;
-    align-items: center;
+    flex-direction: column; /* Stack div elements vertically */
+    align-items: center; /* Center div elements horizontally */
 }
 
 .content-columns {
-    display: flex;
+    display: static;
     max-width: 900px;
     width: 100%;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .column {
     flex: 1;
     padding: 0px 10px; /* Added padding to center the columns */
-    display: flex;
+    display: static;
     flex-direction: column;
     max-width: 100%;
-    border: 10px
+    border: 10px;
+    flex-basis: 100%; /* Each column takes up full width on smaller screens */
+    text-align: center;
 }
 
 .column img {
     max-width: 100%;
-    height: auto; /* Allows the image to maintain its aspect ratio */
-    margin: 0 auto; /* Center the image horizontally */
+    height: auto;
+    margin: 0 auto;
     margin-top: 20px;
 }
 
 .about-me {
     line-height: 25px;
     margin-bottom: 20px;
-}
-
-/* Media Query for Smaller Screens */
-@media screen and (max-width: 768px) {
-    .column {
-        flex-basis: 100%; /* Each column takes up full width on smaller screens */
-        text-align: center;
-    }
-    .content-columns {
-        margin-top: 20px;
-    }
 }
