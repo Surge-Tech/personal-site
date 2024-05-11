@@ -36,6 +36,8 @@
     width: 100%;
     border-radius: 5px; /* Add rounded corners to image */
     margin-top: 10px; /* Add space between paragraph and image */
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* Link Styles */
