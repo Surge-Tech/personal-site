@@ -23,7 +23,7 @@
     display: static;
     flex-direction: column;
     max-width: 100%;
-    border: 10px;
+    border: 5px;
     flex-basis: 100%; /* Each column takes up full width on smaller screens */
     text-align: center;
 }
@@ -32,10 +32,15 @@
     max-width: 100%;
     height: auto;
     margin: 0 auto;
-    margin-top: 20px;
+    margin-top: auto;
+}
+
+.about-me-title {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .about-me {
     line-height: 25px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
