@@ -73,8 +73,8 @@ export default function About() {
               <div className="space-y-3">
                 {/* Work / education highlights — add real entries here */}
                 {[
-                  { label: 'Software Development', sub: 'A.A.S. Degree — Central New Mexico Community College' },
-                  { label: 'Mathematics', sub: 'Currently pursuing B.S. — University of New Mexico' },
+                  { label: 'Software Development', sub: 'A.A.S. Degree — Coastal Carolina Community College' },
+                  { label: 'Mathematics', sub: 'Currently pursuing B.A. — University of North Carolina at Wilmington' },
                 ].map(item => (
                   <div key={item.label} className={`flex items-start gap-3 p-4 rounded-xl border ${cardBg}`}>
                     <span className="mt-1 w-2 h-2 rounded-full bg-teal-500 flex-shrink-0" aria-hidden="true" />

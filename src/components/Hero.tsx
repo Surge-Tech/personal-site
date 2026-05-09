@@ -73,7 +73,7 @@ export default function Hero() {
             View My Work
           </a>
           <a
-            href="/personal-site/resume.pdf"
+            href="/resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className={`px-8 py-3 rounded-lg font-semibold border transition-colors ${isDark ? 'border-slate-600 text-slate-300 hover:border-teal-500 hover:text-teal-400' : 'border-slate-300 text-slate-600 hover:border-teal-500 hover:text-teal-600'}`}

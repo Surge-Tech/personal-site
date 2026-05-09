@@ -130,7 +130,7 @@ export default function Navbar() {
                 {isDark ? <SunIcon /> : <MoonIcon />}
               </button>
               <a
-                href="/personal-site/resume.pdf"
+                href="/resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-4 py-2 text-sm font-semibold rounded-lg border border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white transition-colors"
@@ -215,7 +215,7 @@ export default function Navbar() {
             </nav>
 
             <a
-              href="/personal-site/resume.pdf"
+              href="/resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
               onClick={closeMenu}
