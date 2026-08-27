@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="keywords" content="Fourier synthesis, Fourier series, sine wave, piano, waveform, visualizer, audio, sound, music, equal temperament">
+<meta name="author" content="Nata'ani Bitselley-Romo">
+<meta name=""description" content="A piano waveform visualizer that demonstrates Fourier superposition by allowing users to play pure sine tones and visualize their combined waveform.">
+<meta name="version" content="1.2.5">
+<title>Piano Waveform Visualizer — Fourier Superposition</title>
+<style>
+  :root{
+    --bg: #0a0d10;
+    --board: #0e1417;
+    --board-border: #dfe3e0;
+    --chalk-white: #eef2f1;
+    --chalk-dim: #7f9296;
+    --chalk-gold: #f2c14e;
+    --key-white: #f6f4ee;
+    --key-white-shadow: #c9c6bb;
+    --key-black: #191c1e;
+    --key-active-glow: #7fe0ea;
+    --panel-radius: 6px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--chalk-white);
+    font-family: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;
+  }
+
+  .mono {
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  }
+
+  .wrap {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 28px 20px 40px;
+  }
+
+  header {
+    margin-bottom: 22px;
+  }
+
+  .eyebrow {
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--chalk-gold);
+    margin: 0 0 8px;
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 400;
+    margin: 0 0 8px;
+    letter-spacing: 0.01em;
+  }
+
+  header p {
+    margin: 0;
+    color: var(--chalk-dim);
+    font-size: 14.5px;
+    line-height: 1.55;
+    max-width: 640px;
+  }
+
+  .board {
+    background: var(--board);
+    border: 1px solid var(--board-border);
+    border-radius: var(--panel-radius);
+    padding: 20px;
+    margin-bottom: 22px;
+  }
+
+  .board-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .board-heading h2 {
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--chalk-dim);
+    margin: 0;
+  }
+
+  .equation {
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 14px;
+    color: var(--chalk-white);
+    letter-spacing: 0.01em;
+    min-height: 20px;
+  }
+
+  .equation .placeholder { color: var(--chalk-dim); font-style: italic; font-family: Georgia, serif; }
+
+  #componentPanel { margin-bottom: 14px; }
+
+  .empty-state {
+    border: 1px dashed #33393c;
+    border-radius: var(--panel-radius);
+    padding: 26px 16px;
+    text-align: center;
+    color: var(--chalk-dim);
+    font-size: 13.5px;
+  }
+
+  .component-row {
+    display: flex;
+    align-items: stretch;
+    gap: 12px;
+    padding: 6px 0;
+    border-bottom: 1px solid #1c2124;
+  }
+  .component-row:first-child { border-top: 1px solid #1c2124; }
+
+  .component-label {
+    flex: 0 0 96px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+  }
+
+  .component-label .swatch-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .swatch {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .component-label .note-name {
+    font-size: 14px;
+  }
+
+  .component-label .note-freq {
+    font-size: 11px;
+    color: var(--chalk-dim);
+  }
+
+  canvas.wave-canvas {
+    flex: 1 1 auto;
+    width: 100%;
+    height: 64px;
+    display: block;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid #262c2f;
+    margin: 14px 0;
+  }
+
+  .sum-heading {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+
+  .sum-heading h2 {
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--chalk-gold);
+    margin: 0;
+  }
+
+  canvas#sumCanvas {
+    width: 100%;
+    height: 190px;
+    display: block;
+  }
+
+  .sum-canvas-wrap {
+    position: relative;
+    padding: 6px 10px 24px 28px;
+  }
+
+  .axis-label {
+    position: absolute;
+    color: var(--chalk-dim);
+    pointer-events: none;
+  }
+
+  .axis-label-x {
+    left: 28px;
+    right: 10px;
+    bottom: 2px;
+    text-align: center;
+    font-family: Georgia, 'Iowan Old Style', 'Palatino Linotype', serif;
+    font-style: italic;
+    font-size: 13px;
+  }
+
+  .axis-label-y {
+    left: 2px;
+    top: 6px;
+    bottom: 24px;
+    width: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+  }
+
+  /* Piano */
+  .piano-dock {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    background: var(--bg);
+    border-top: 1px solid #1c2124;
+    padding: 16px 20px calc(16px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .piano-dock::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -28px;
+    height: 28px;
+    background: linear-gradient(to bottom, rgba(10, 13, 16, 0), var(--bg));
+    pointer-events: none;
+  }
+
+  .piano-section {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: var(--board);
+    border: 1px solid var(--board-border);
+    border-radius: var(--panel-radius);
+    padding: 18px 20px 20px;
+  }
+
+  .piano-frame {
+    background: #050607;
+    border-radius: 4px;
+    padding: 10px 10px 0;
+  }
+
+  .piano-keys {
+    position: relative;
+    height: 168px;
+  }
+
+  .white-keys {
+    display: flex;
+    height: 100%;
+  }
+
+  .key {
+    all: unset;
+    box-sizing: border-box;
+    cursor: pointer;
+    user-select: none;
+    touch-action: manipulation;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 10px;
+  }
+
+  .key:focus-visible {
+    outline: 2px solid var(--key-active-glow);
+    outline-offset: -3px;
+  }
+
+  .white-key {
+    flex: 1;
+    background: linear-gradient(180deg, var(--key-white) 0%, #e9e6dc 100%);
+    border: 1px solid var(--key-white-shadow);
+    border-radius: 0 0 4px 4px;
+    color: #4a4a46;
+    font-size: 13px;
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    transition: background 0.08s ease;
+  }
+
+  .white-key + .white-key { border-left: none; }
+
+  .white-key.active {
+    background: linear-gradient(180deg, #bdf1f6 0%, #7fe0ea 100%);
+    color: #06333a;
+    font-weight: bold;
+  }
+
+  .black-key {
+    position: absolute;
+    top: 0;
+    height: 62%;
+    z-index: 2;
+    background: linear-gradient(180deg, #2a2f32 0%, var(--key-black) 100%);
+    border: 1px solid #000;
+    border-radius: 0 0 3px 3px;
+    color: #9aa5a8;
+    font-size: 10.5px;
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    padding-bottom: 8px;
+  }
+
+  .black-key.active {
+    background: linear-gradient(180deg, #3fb9c7 0%, #1d7c86 100%);
+    color: #e8feff;
+    font-weight: bold;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .key:active { transform: translateY(1px); }
+  }
+
+  .controls-row {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid #23282b;
+  }
+
+  .control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12.5px;
+    color: var(--chalk-dim);
+  }
+
+  input[type="range"] {
+    width: 130px;
+    accent-color: var(--key-active-glow);
+  }
+
+  button.action {
+    all: unset;
+    cursor: pointer;
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--chalk-white);
+    border: 1px solid #3a4144;
+    padding: 7px 14px;
+    border-radius: 4px;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  button.action:hover {
+    border-color: var(--key-active-glow);
+    color: var(--key-active-glow);
+  }
+
+  button.action.frozen {
+    border-color: var(--chalk-gold);
+    color: var(--chalk-gold);
+    background: rgba(242, 193, 78, 0.08);
+  }
+
+  .status {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--chalk-dim);
+    font-family: 'SFMono-Regular', Consolas, monospace;
+  }
+
+  @media (max-width: 620px) {
+    .piano-keys { height: 128px; }
+    .component-label { flex-basis: 76px; }
+    .component-label .note-freq { display: none; }
+    .status { margin-left: 0; flex-basis: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">Fourier Synthesis Lab</p>
+    <h1>Piano Waveform Visualizer</h1>
+    <p>Click one or more keys to play pure sine tones. Each note's own waveform is plotted as it sounds; the panel below shows the instantaneous sum of every active note.</p>
+  </header>
+
+  <div class="board">
+    <div id="componentPanel">
+      <div class="empty-state" id="emptyState">Press a key on the keyboard below to hear a tone and see its wave.</div>
+    </div>
+
+    <hr class="divider" id="sumDivider" style="display:none;">
+
+    <div id="sumSection" style="display:none;">
+      <div class="sum-heading">
+        <h2>Combined signal — Σ y(t)</h2>
+      </div>
+      <div class="equation" id="equation"></div>
+      <div class="sum-canvas-wrap">
+        <span class="axis-label axis-label-y">Amplitude</span>
+        <canvas id="sumCanvas" class="mono"></canvas>
+        <span class="axis-label axis-label-x">t</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="piano-dock" id="pianoDock">
+    <div class="piano-section">
+      <div class="piano-frame">
+        <div class="piano-keys" id="pianoKeys"></div>
+      </div>
+
+      <div class="controls-row">
+        <div class="control">
+          <span>Volume</span>
+          <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.8">
+        </div>
+        <button class="action" id="freezeBtn" aria-pressed="false">Freeze</button>
+        <button class="action" id="stopAllBtn">Stop all</button>
+        <span class="status" id="statusText">0 notes active</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---- Note data: one full chromatic octave, C4 through B4 (equal temperament, A4 = 440 Hz) ----
+  const NOTES = [
+    { name: "C",  freq: 261.63, type: "white" },
+    { name: "C#", freq: 277.18, type: "black", after: 0 },
+    { name: "D",  freq: 293.66, type: "white" },
+    { name: "D#", freq: 311.13, type: "black", after: 1 },
+    { name: "E",  freq: 329.63, type: "white" },
+    { name: "F",  freq: 349.23, type: "white" },
+    { name: "F#", freq: 369.99, type: "black", after: 3 },
+    { name: "G",  freq: 392.00, type: "white" },
+    { name: "G#", freq: 415.30, type: "black", after: 4 },
+    { name: "A",  freq: 440.00, type: "white" },
+    { name: "A#", freq: 466.16, type: "black", after: 5 },
+    { name: "B",  freq: 493.88, type: "white" }
+  ];
+
+  const COLORS = [
+    "#5fd3e0", "#e8956b", "#b79ce8", "#8fd694",
+    "#e88aa6", "#eda85f", "#7ec8e3", "#c9e87e",
+    "#d68fe8", "#6bdba0", "#e8c86b", "#a0a8e8"
+  ];
+
+  NOTES.forEach((n, i) => { n.index = i; n.color = COLORS[i]; });
+
+  const NOTE_LEVEL = 0.22;   // per-note gain
+  const FFT_SIZE = 1024;     // time-domain window length for every analyser (keeps x-axes aligned)
+
+  // ---- Audio graph state (created lazily on first key press, per browser autoplay policy) ----
+  let ctx = null, masterGain = null, masterAnalyser = null, compressor = null;
+  let sumDataArray = null;
+  const activeNotes = new Map(); // note.name -> { osc, gain, analyser, dataArray, note, canvas }
+
+  const componentPanel = document.getElementById("componentPanel");
+  const emptyState = document.getElementById("emptyState");
+  const sumSection = document.getElementById("sumSection");
+  const sumDivider = document.getElementById("sumDivider");
+  const sumCanvas = document.getElementById("sumCanvas");
+  const equationEl = document.getElementById("equation");
+  const statusText = document.getElementById("statusText");
+  const volumeSlider = document.getElementById("volumeSlider");
+  const stopAllBtn = document.getElementById("stopAllBtn");
+  const freezeBtn = document.getElementById("freezeBtn");
+  const pianoKeys = document.getElementById("pianoKeys");
+
+  let frozen = false;
+
+  function setFrozen(value) {
+    frozen = value;
+    freezeBtn.classList.toggle("frozen", frozen);
+    freezeBtn.textContent = frozen ? "Resume" : "Freeze";
+    freezeBtn.setAttribute("aria-pressed", String(frozen));
+    updateStatusText();
+  }
+
+  // ---- Build the keyboard ----
+  const whiteNotes = NOTES.filter(n => n.type === "white");
+  const blackNotes = NOTES.filter(n => n.type === "black");
+  const whiteWidthPct = 100 / whiteNotes.length;
+  const blackWidthPct = whiteWidthPct * 0.6;
+
+  const whiteRow = document.createElement("div");
+  whiteRow.className = "white-keys";
+  whiteNotes.forEach(note => {
+    const btn = document.createElement("button");
+    btn.className = "key white-key";
+    btn.type = "button";
+    btn.dataset.note = note.name;
+    btn.setAttribute("aria-pressed", "false");
+    btn.setAttribute("aria-label", note.name + " (" + note.freq.toFixed(2) + " Hz)");
+    btn.textContent = note.name;
+    btn.addEventListener("click", () => toggleNote(note));
+    note.keyEl = btn;
+    whiteRow.appendChild(btn);
+  });
+  pianoKeys.appendChild(whiteRow);
+
+  blackNotes.forEach(note => {
+    const btn = document.createElement("button");
+    btn.className = "key black-key";
+    btn.type = "button";
+    btn.dataset.note = note.name;
+    btn.setAttribute("aria-pressed", "false");
+    btn.setAttribute("aria-label", note.name + " (" + note.freq.toFixed(2) + " Hz)");
+    btn.textContent = note.name;
+    const left = (note.after + 1) * whiteWidthPct - blackWidthPct / 2;
+    btn.style.left = left + "%";
+    btn.style.width = blackWidthPct + "%";
+    btn.addEventListener("click", () => toggleNote(note));
+    note.keyEl = btn;
+    pianoKeys.appendChild(btn);
+  });
+
+  // ---- Audio setup ----
+  function ensureAudioContext() {
+    if (ctx) {
+      if (ctx.state === "suspended") ctx.resume();
+      return;
+    }
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    masterGain = ctx.createGain();
+    masterGain.gain.value = parseFloat(volumeSlider.value);
+
+    masterAnalyser = ctx.createAnalyser();
+    masterAnalyser.fftSize = FFT_SIZE;
+    sumDataArray = new Float32Array(FFT_SIZE);
+
+    compressor = ctx.createDynamicsCompressor();
+    compressor.threshold.value = -18;
+    compressor.knee.value = 24;
+    compressor.ratio.value = 10;
+    compressor.attack.value = 0.003;
+    compressor.release.value = 0.25;
+
+    masterGain.connect(masterAnalyser);   // analysis tap (pre-compressor: true mathematical sum)
+    masterGain.connect(compressor);
+    compressor.connect(ctx.destination);
+
+    requestAnimationFrame(tick);
+  }
+
+  function noteOn(note) {
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    osc.type = "sine";
+    osc.frequency.value = note.freq;
+
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(NOTE_LEVEL, now + 0.015);
+
+    const analyser = ctx.createAnalyser();
+    analyser.fftSize = FFT_SIZE;
+
+    osc.connect(gain);
+    gain.connect(analyser);   // analysis tap (pre-sum: this note's own signal)
+    gain.connect(masterGain);
+    osc.start();
+
+    activeNotes.set(note.name, {
+      osc, gain, analyser,
+      dataArray: new Float32Array(FFT_SIZE),
+      note, canvas: null, row: null
+    });
+  }
+
+  function noteOff(note) {
+    const rec = activeNotes.get(note.name);
+    if (!rec) return;
+    const now = ctx.currentTime;
+    rec.gain.gain.cancelScheduledValues(now);
+    rec.gain.gain.setValueAtTime(rec.gain.gain.value, now);
+    rec.gain.gain.linearRampToValueAtTime(0, now + 0.02);
+    rec.osc.stop(now + 0.03);
+    rec.osc.onended = () => {
+      rec.osc.disconnect();
+      rec.gain.disconnect();
+      rec.analyser.disconnect();
+    };
+    activeNotes.delete(note.name);
+  }
+
+  freezeBtn.addEventListener("click", () => setFrozen(!frozen));
+
+  function toggleNote(note) {
+    ensureAudioContext();
+    const isActive = activeNotes.has(note.name);
+    if (isActive) {
+      noteOff(note);
+    } else {
+      noteOn(note);
+    }
+    note.keyEl.classList.toggle("active", !isActive);
+    note.keyEl.setAttribute("aria-pressed", String(!isActive));
+    rebuildPanels();
+  }
+
+  // Keyboard access: Enter / Space toggles a focused key
+  pianoKeys.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    const btn = document.activeElement;
+    if (btn && btn.classList.contains("key")) {
+      e.preventDefault();
+      const note = NOTES.find(n => n.name === btn.dataset.note);
+      if (note) toggleNote(note);
+    }
+  });
+
+  stopAllBtn.addEventListener("click", () => {
+    Array.from(activeNotes.values()).forEach(rec => {
+      noteOff(rec.note);
+      rec.note.keyEl.classList.remove("active");
+      rec.note.keyEl.setAttribute("aria-pressed", "false");
+    });
+    rebuildPanels();
+  });
+
+  volumeSlider.addEventListener("input", () => {
+    if (!ctx) return;
+    masterGain.gain.setTargetAtTime(parseFloat(volumeSlider.value), ctx.currentTime, 0.01);
+  });
+
+  // ---- Panel construction ----
+  // Reconciles the DOM rather than rebuilding it from scratch: existing rows/canvases
+  // are reused so their drawn pixels survive when the chord changes while frozen.
+  function rebuildPanels() {
+    if (activeNotes.size === 0) {
+      if (emptyState.parentNode !== componentPanel) {
+        componentPanel.innerHTML = "";
+        componentPanel.appendChild(emptyState);
+      }
+      sumSection.style.display = "none";
+      sumDivider.style.display = "none";
+      updateStatusText();
+      return;
+    }
+
+    if (emptyState.parentNode === componentPanel) componentPanel.removeChild(emptyState);
+
+    const ordered = Array.from(activeNotes.values()).sort((a, b) => a.note.freq - b.note.freq);
+    const wanted = new Set(ordered.map(r => r.note.name));
+
+    // Drop rows for notes that were turned off.
+    Array.from(componentPanel.children).forEach(rowEl => {
+      if (!wanted.has(rowEl.dataset.note)) componentPanel.removeChild(rowEl);
+    });
+
+    // Create rows only for newly-active notes; continuing notes keep their existing
+    // row/canvas untouched (and therefore keep whatever was last drawn on them).
+    ordered.forEach(rec => {
+      if (rec.row) return;
+
+      const row = document.createElement("div");
+      row.className = "component-row";
+      row.dataset.note = rec.note.name;
+
+      const label = document.createElement("div");
+      label.className = "component-label";
+      label.innerHTML =
+        '<div class="swatch-row"><span class="swatch" style="background:' + rec.note.color + '"></span>' +
+        '<span class="note-name">' + rec.note.name + '</span></div>' +
+        '<span class="note-freq mono">' + rec.note.freq.toFixed(2) + ' Hz</span>';
+
+      const canvas = document.createElement("canvas");
+      canvas.className = "wave-canvas";
+
+      row.appendChild(label);
+      row.appendChild(canvas);
+      rec.row = row;
+      rec.canvas = canvas;
+    });
+
+    // Reorder by pitch. appendChild on an existing node moves it — it does not
+    // recreate the element, so canvases that already hold a frozen frame are unaffected.
+    ordered.forEach(rec => componentPanel.appendChild(rec.row));
+
+    sumSection.style.display = "";
+    sumDivider.style.display = "";
+    updateStatusText(ordered.length);
+    updateEquation(ordered);
+
+    // If frozen, the continuous loop stays paused — but take one accurate snapshot now
+    // so a newly-added note isn't left blank and the sum reflects the current chord.
+    if (frozen) renderFrame();
+  }
+
+  function updateStatusText(count) {
+    const n = typeof count === "number" ? count : activeNotes.size;
+    let text = n + (n === 1 ? " note active" : " notes active");
+    if (frozen) text += " \u00b7 frozen";
+    statusText.textContent = text;
+  }
+
+  function updateEquation(ordered) {
+    if (!ordered || ordered.length === 0) {
+      equationEl.innerHTML = '<span class="placeholder">y(t) = 0</span>';
+      return;
+    }
+    const terms = ordered.map(rec =>
+      '<span style="color:' + rec.note.color + '">sin(2&pi;&middot;' + rec.note.freq.toFixed(2) + '&middot;t)</span>'
+    );
+    equationEl.innerHTML = "y(t) = " + terms.join(" + ");
+  }
+
+  // ---- Drawing ----
+  function ensureCanvasSize(canvas) {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    const w = Math.max(1, Math.round(rect.width * dpr));
+    const h = Math.max(1, Math.round(rect.height * dpr));
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width = w;
+      canvas.height = h;
+    }
+  }
+
+  function drawWave(canvas, data, color, range, opts) {
+    if (!canvas || canvas.clientWidth === 0) return;
+    ensureCanvasSize(canvas);
+    const c = canvas.getContext("2d");
+    const w = canvas.width, h = canvas.height;
+    c.clearRect(0, 0, w, h);
+
+    // baseline
+    c.beginPath();
+    c.moveTo(0, h / 2);
+    c.lineTo(w, h / 2);
+    c.strokeStyle = "rgba(238,242,241,0.25)";
+    c.lineWidth = 1;
+    c.stroke();
+
+    // waveform
+    c.beginPath();
+    const n = data.length;
+    for (let i = 0; i < n; i++) {
+      const x = (i / (n - 1)) * w;
+      const y = h / 2 - (data[i] / range) * (h / 2) * 0.88;
+      if (i === 0) c.moveTo(x, y); else c.lineTo(x, y);
+    }
+    c.lineJoin = "round";
+    c.lineWidth = opts && opts.glow ? 3 : 2.4;
+    c.strokeStyle = color;
+    if (opts && opts.glow) {
+      c.shadowColor = color;
+      c.shadowBlur = 8;
+    } else {
+      c.shadowBlur = 0;
+    }
+    c.stroke();
+    c.shadowBlur = 0;
+  }
+
+  function renderFrame() {
+    if (activeNotes.size === 0) return;
+
+    let maxCount = 0;
+    activeNotes.forEach(rec => {
+      if (!rec.canvas) return;
+      rec.analyser.getFloatTimeDomainData(rec.dataArray);
+      drawWave(rec.canvas, rec.dataArray, rec.note.color, NOTE_LEVEL * 1.15);
+      maxCount++;
+    });
+    if (maxCount === 0) return;
+
+    masterAnalyser.getFloatTimeDomainData(sumDataArray);
+    const range = Math.max(maxCount * NOTE_LEVEL * 1.15, NOTE_LEVEL * 1.15);
+    drawWave(sumCanvas, sumDataArray, "#f2c14e", range, { glow: true });
+  }
+
+  function tick() {
+    requestAnimationFrame(tick);
+    if (frozen) return;
+    renderFrame();
+  }
+
+  // ---- Keep scrollable content clear of the fixed bottom dock ----
+  // The dock's height varies (mobile breakpoint shrinks the keyboard, the controls
+  // row can wrap to two lines), so this is measured live rather than hardcoded.
+  const wrapEl = document.querySelector(".wrap");
+  const pianoDock = document.getElementById("pianoDock");
+
+  function updateDockSpacing() {
+    const h = pianoDock.getBoundingClientRect().height;
+    wrapEl.style.paddingBottom = (h + 24) + "px";
+  }
+
+  updateDockSpacing();
+  window.addEventListener("resize", updateDockSpacing);
+  if (window.ResizeObserver) {
+    new ResizeObserver(updateDockSpacing).observe(pianoDock);
+  }
+
+})();
+</script>
+</body>
+</html>
