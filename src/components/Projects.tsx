@@ -2,39 +2,34 @@ import { useTheme } from '../context/ThemeContext'
 
 interface Project {
   title: string
-  repo: string
+  repo?: string
+  demoUrl?: string
+  status?: 'in-progress'
   description: string
   tags: string[]
 }
 
 const PROJECTS: Project[] = [
   {
-    title: 'RFID-Triggered Audio System',
-    repo: 'Surge-Tech/RFID-Triggered-Audio-System',
+    title: 'Piano Waveform Visualizer',
+    demoUrl: '/fourier-tool/',
     description:
-      'A hardware project that plays specific audio tracks when the correct RFID tag is scanned. Demonstrates hands-on embedded programming with Arduino — uncommon and memorable.',
-    tags: ['C++', 'Arduino', 'Embedded Systems', 'Hardware'],
+      'An interactive Fourier superposition tool — play pure sine tones on a virtual piano and watch the combined waveform build in real time. Built as a companion visual for a signal-processing research paper.',
+    tags: ['JavaScript', 'Web Audio API', 'Fourier Analysis', 'Interactive'],
   },
   {
-    title: 'Niche',
-    repo: 'Surge-Tech/Niche',
+    title: 'Unit Converter',
+    demoUrl: '/unit-converter/',
     description:
-      'A productivity app for logging daily tasks, tracking progress, and staying on top of personal goals. Full-stack thinking applied to a real-world use case.',
-    tags: ['TypeScript', 'Web App', 'Productivity'],
+      'A fast, reversible converter across ten categories — temperature, length, mass, volume, and more. Type into either side and it converts both ways instantly.',
+    tags: ['JavaScript', 'Interactive', 'Utility'],
   },
   {
-    title: 'D&D Tables Site',
-    repo: 'Surge-Tech/dnd-tables-site',
+    title: 'BoozyDB',
+    status: 'in-progress',
     description:
-      'A live web tool for generating random tables used in tabletop RPG campaigns. A deployed, usable site with an approachable and creative use case.',
-    tags: ['Web', 'JavaScript', 'Random Generation'],
-  },
-  {
-    title: 'Mother Cluckers',
-    repo: 'Surge-Tech/mother-cluckers',
-    description:
-      'A fully packaged game complete with an installer executable for easy distribution. Demonstrates end-to-end product thinking — build, package, and ship.',
-    tags: ['Game Dev', 'NSIS', 'Installer Scripting'],
+      'A tablet-first cocktail recipe catalog — a curated collection of classic and modern recipes with glass illustrations, ingredient lists, and step-by-step instructions, backed by a CLI for managing the recipe data. Static-site deployment is planned but not live yet.',
+    tags: ['Python', 'Flask', 'CLI', 'Recipe Catalog'],
   },
 ]
 
@@ -67,25 +62,31 @@ function ProjectCard({ project }: { project: Project }) {
   return (
     <article
       className={`flex flex-col p-6 rounded-2xl border transition-all duration-300 group ${
-        isDark
-          ? 'bg-navy-800 border-navy-800 hover:border-teal-500/40 hover:shadow-xl hover:shadow-teal-500/5'
-          : 'bg-white border-slate-200 hover:border-teal-400 hover:shadow-lg shadow-sm'
+        project.status === 'in-progress'
+          ? isDark
+            ? 'bg-navy-800 border-navy-800 border-dashed'
+            : 'bg-white border-slate-200 border-dashed'
+          : isDark
+            ? 'bg-navy-800 border-navy-800 hover:border-teal-500/40 hover:shadow-xl hover:shadow-teal-500/5'
+            : 'bg-white border-slate-200 hover:border-teal-400 hover:shadow-lg shadow-sm'
       }`}
     >
       <div className="flex items-start justify-between gap-4 mb-3">
         <h3 className={`text-lg font-bold leading-snug ${isDark ? 'text-slate-100 group-hover:text-teal-400' : 'text-slate-900 group-hover:text-teal-600'} transition-colors`}>
           {project.title}
         </h3>
-        <svg
-          className={`h-6 w-6 flex-shrink-0 mt-0.5 transition-colors ${isDark ? 'text-slate-600' : 'text-slate-300'}`}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={1.5}
-          aria-hidden="true"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M3 7h6m0 0V3m0 4L3 3M21 17h-6m0 0v4m0-4l6 4" />
-        </svg>
+        {project.status !== 'in-progress' && (
+          <svg
+            className={`h-6 w-6 flex-shrink-0 mt-0.5 transition-colors ${isDark ? 'text-slate-600' : 'text-slate-300'}`}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.5}
+            aria-hidden="true"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 7h6m0 0V3m0 4L3 3M21 17h-6m0 0v4m0-4l6 4" />
+          </svg>
+        )}
       </div>
 
       <p className={`text-sm leading-relaxed flex-1 mb-5 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
@@ -98,21 +99,59 @@ function ProjectCard({ project }: { project: Project }) {
         ))}
       </div>
 
-      <a
-        href={`https://github.com/${project.repo}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={`View ${project.title} on GitHub`}
-        className={`inline-flex items-center gap-2 text-sm font-semibold transition-colors ${
-          isDark ? 'text-teal-400 hover:text-teal-300' : 'text-teal-600 hover:text-teal-700'
-        }`}
-      >
-        <GitHubIcon />
-        View on GitHub
-        <svg className="h-3 w-3" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
-          <path d="M2.5 9.5l7-7M9.5 2.5H3M9.5 2.5v6.5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </a>
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+        {project.status === 'in-progress' && (
+          <span
+            className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full ${
+              isDark
+                ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                : 'bg-amber-50 text-amber-700 border border-amber-200'
+            }`}
+          >
+            <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 7v5l3 3" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            In progress — not live yet
+          </span>
+        )}
+
+        {project.demoUrl && (
+          <a
+            href={project.demoUrl}
+            aria-label={`Open live demo of ${project.title}`}
+            className={`inline-flex items-center gap-2 text-sm font-semibold transition-colors ${
+              isDark ? 'text-teal-400 hover:text-teal-300' : 'text-teal-600 hover:text-teal-700'
+            }`}
+          >
+            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+            Try it live
+            <svg className="h-3 w-3" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+              <path d="M2.5 9.5l7-7M9.5 2.5H3M9.5 2.5v6.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </a>
+        )}
+
+        {project.repo && (
+          <a
+            href={`https://github.com/${project.repo}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`View ${project.title} on GitHub`}
+            className={`inline-flex items-center gap-2 text-sm font-semibold transition-colors ${
+              isDark ? 'text-slate-400 hover:text-teal-400' : 'text-slate-600 hover:text-teal-600'
+            }`}
+          >
+            <GitHubIcon />
+            {project.demoUrl ? 'Source' : 'View on GitHub'}
+            <svg className="h-3 w-3" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+              <path d="M2.5 9.5l7-7M9.5 2.5H3M9.5 2.5v6.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </a>
+        )}
+      </div>
     </article>
   )
 }
