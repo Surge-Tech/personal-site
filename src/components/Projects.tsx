@@ -11,6 +11,13 @@ interface Project {
 
 const PROJECTS: Project[] = [
   {
+    title: 'Jeopardy',
+    repo: 'Surge-Tech/jeopardy',
+    description:
+      'A self-hosted Jeopardy platform — build custom boards with text, image, and video clues, then host game nights in person or online. Players buzz in from any phone browser (no install), and a real-time Socket.io backend ensures the first buzz always wins.',
+    tags: ['Node.js', 'React', 'TypeScript', 'Socket.io', 'Tailwind CSS'],
+  },
+  {
     title: 'Piano Waveform Visualizer',
     demoUrl: '/fourier-tool/',
     description:
@@ -26,6 +33,7 @@ const PROJECTS: Project[] = [
   },
   {
     title: 'BoozyDB',
+    repo: 'Surge-Tech/boozy-db',
     status: 'in-progress',
     description:
       'A tablet-first cocktail recipe catalog — a curated collection of classic and modern recipes with glass illustrations, ingredient lists, and step-by-step instructions, backed by a CLI for managing the recipe data. Static-site deployment is planned but not live yet.',
@@ -176,7 +184,7 @@ export default function Projects() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
           {PROJECTS.map(project => (
-            <ProjectCard key={project.repo} project={project} />
+            <ProjectCard key={project.title} project={project} />
           ))}
         </div>
 
