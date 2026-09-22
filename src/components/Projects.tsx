@@ -34,10 +34,10 @@ const PROJECTS: Project[] = [
   {
     title: 'BoozyDB',
     repo: 'Surge-Tech/boozy-db',
-    status: 'in-progress',
+    demoUrl: '/boozydb/',
     description:
-      'A tablet-first cocktail recipe catalog — a curated collection of classic and modern recipes with glass illustrations, ingredient lists, and step-by-step instructions, backed by a CLI for managing the recipe data. Static-site deployment is planned but not live yet.',
-    tags: ['Python', 'Flask', 'CLI', 'Recipe Catalog'],
+      'A cocktail recipe catalog with a static web app and a Python CLI. Browse 100+ classic and modern recipes with SVG glass illustrations, spirit color coding, and method badges. Recipes are stored as plain JSON files — no database required.',
+    tags: ['Python', 'TypeScript', 'CLI', 'Static Site'],
   },
 ]
 
