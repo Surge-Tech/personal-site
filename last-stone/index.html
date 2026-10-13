@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Last Stone</title>
+  <link rel="stylesheet" href="style.css?v=c657683e">
+</head>
+<body>
+  <nav class="journey" aria-label="Scenes">
+    <div class="journey-inner">
+      <a href="#s0"><b>0</b><span>Nobody beats it</span></a>
+      <a href="#s1"><b>1</b><span>One number</span></a>
+      <a href="#s2"><b>2</b><span>It adapts</span></a>
+      <a href="#s3"><b>3</b><span>The real game</span></a>
+      <a href="#s4"><b>4</b><span>The binary code</span></a>
+      <a href="#s5"><b>5</b><span>The twist</span></a>
+      <a href="#s6"><b>6</b><span>You're in</span></a>
+      <a href="#why"><b>A</b><span>Why it works</span></a>
+    </div>
+  </nav>
+
+  <main>
+    <header>
+      <h1>The Last Stone</h1>
+      <p class="sub">There is a game you can't lose once you know the code. Most people never learn it. In a few minutes, you will.</p>
+      <p class="muted"><button type="button" class="link" id="enter-present">Presenter mode</button> &middot; big type, one scene at a time, keyboard or clicker</p>
+    </header>
+
+    <!-- ===================== 0: nobody beats it ===================== -->
+    <section class="chapter" id="s0" aria-labelledby="h-s0">
+      <p class="kicker">Scene 0</p>
+      <h2 id="h-s0">Nobody beats it</h2>
+      <p class="lede">Fifteen stones in a pile. You and the bot take turns taking 1, 2 or 3 stones. Whoever takes the <em>last</em> stone wins. The bot goes first. Beat it.</p>
+
+      <div class="nim-board" data-first="bot" data-reveal="2losses" data-hide="last"></div>
+
+      <p class="bridge" data-after-check="2losses" hidden>Still losing? Good. It isn't lucky and it isn't guessing. It knows something, and in about a minute, so will you.</p>
+    </section>
+
+    <!-- ===================== 1: one number ===================== -->
+    <section class="chapter" id="s1" aria-labelledby="h-s1">
+      <p class="kicker">Scene 1</p>
+      <h2 id="h-s1">One number</h2>
+      <p class="lede">The bot isn't clever. It is keeping track of one number. Find it.</p>
+      <p>Mark every pile size where the player about to move is <b>doomed</b>, however well they play. Start from the end: with 0 stones left it's your move, but the other player just took the last stone, so you've already lost. Then work upward. A size is doomed if every move you have hands your opponent a size that isn't.</p>
+
+      <section class="panel"><div class="predict" data-rules="1-3" data-n="24"></div></section>
+
+      <div data-after-check hidden>
+        <p class="rule"><b>The doomed sizes are the multiples of 4: 0, 4, 8, 12, 16…</b> Hand your opponent one of them and you can't lose.</p>
+
+        <h3>Why it can't fail</h3>
+        <p>Whatever you take, the code takes the rest of a four. Try to break it.</p>
+        <section class="panel"><div class="pairing"></div></section>
+
+        <h3>Your turn</h3>
+        <p>You go first from 15. Fifteen isn't a multiple of 4. What's your first move?</p>
+        <div class="nim-board" data-first="human" data-reveal="win" data-hide="last,bot"></div>
+
+        <p class="bridge" data-after-check="win" hidden>That's the first half of the code. Keep it. It's about to get bigger.</p>
+      </div>
+    </section>
+
+    <!-- ===================== 2: it adapts ===================== -->
+    <section class="chapter" id="s2" aria-labelledby="h-s2">
+      <p class="kicker">Scene 2</p>
+      <h2 id="h-s2">It adapts</h2>
+      <p class="lede">Change the rules and the number changes. Take up to 5 instead of 3: is the number still 4? Predict first, then check.</p>
+      <p>Then flip <b>Last stone</b> to <b>loses</b> and predict again.</p>
+
+      <section class="panel"><div class="predict" data-rules="pick" data-n="30"></div></section>
+
+      <div data-after-check hidden>
+        <p class="rule">If you can take 1 up to <i>k</i> stones, the doomed sizes are the multiples of <i>k</i> + 1. Whatever they take, you take the rest of a <i>k</i> + 1.</p>
+        <p>With the last stone <b>losing</b>, everything slides over by one: the doomed sizes are 1, and then every <i>k</i> + 1 after that (1, 5, 9… for take 1 to 3). Having no stones left stops being doomed. It means the other player just took the last stone, so you have already won.</p>
+        <p>Strange rules, like "take 1, 3 or 4", have no pattern that tidy. They still repeat, every 7.</p>
+        <p class="bridge">Same code, new number. The code adapts to the rules. Remember that.</p>
+      </div>
+    </section>
+
+    <!-- ===================== 3: the real game ===================== -->
+    <section class="chapter" id="s3" aria-labelledby="h-s3">
+      <p class="kicker">Scene 3</p>
+      <h2 id="h-s3">Three rows</h2>
+      <p class="lede">Now the real game. Three rows of stones: 3, 5 and 7. On your turn, take as many as you like from <em>one</em> row. Whoever takes the last stone <b>loses</b>. The bot goes first.</p>
+
+      <div class="mn-board" data-default="3,5,7" data-first="bot" data-last="loses" data-presets="classic" data-reveal="2losses"></div>
+
+      <p class="bridge" data-after-check="2losses" hidden>Same bot. Same result. But it isn't one number anymore. It's all three rows at once. Where would you even start?</p>
+    </section>
+
+    <!-- ===================== 4: the binary code ===================== -->
+    <section class="chapter" id="s4" aria-labelledby="h-s4">
+      <p class="kicker">Scene 4</p>
+      <h2 id="h-s4">Count the ones</h2>
+      <p class="lede">Here is how to see every row at once. Write each row in binary. Every digit stands for a power of 2: 8, 4, 2 and 1.</p>
+      <p>Count the 1s in each column. If every column has an even number of 1s, call the position <b>balanced</b>. Click around and look for the balanced ones.</p>
+
+      <section class="panel"><div class="binlab" data-piles="1,2,3"></div></section>
+
+      <div data-after-check hidden>
+        <p class="rule"><b>Whoever has to move from a balanced position is doomed.</b> Hand your opponent a balanced position and you are in control.</p>
+        <p>That is true whether the last stone wins or loses, as long as at least two rows still have more than one stone. Hold on to that "as long as". It matters next.</p>
+
+        <details class="hint">
+          <summary>Why does it work?</summary>
+          <p>There are three facts to check. First, with no stones left every column is even, so the finished game is balanced. Second, from a balanced position any move changes one row, which flips at least one of its digits, so some column turns odd: every move from a balanced position unbalances it. Third, from an unbalanced position there is always a move that balances it. Find the leftmost odd column, pick a row with a 1 there, and flip that row's digits in every odd column. Its leftmost flipped digit goes from 1 to 0, so the row gets smaller and the move is legal. Charles Bouton proved this in 1901.</p>
+        </details>
+
+        <p class="bridge">That is the code for the middle of the game. At the very end, it breaks.</p>
+      </div>
+    </section>
+
+    <!-- ===================== 5: the twist ===================== -->
+    <section class="chapter" id="s5" aria-labelledby="h-s5">
+      <p class="kicker">Scene 5</p>
+      <h2 id="h-s5">The twist</h2>
+      <p class="lede">When the last stone <b>loses</b>, one thing changes, and only at the very end. Here are some endings: one big row, plus a few single stones. You go first. Find the move that wins.</p>
+
+      <div class="mn-board" data-default="4,1" data-first="human" data-last="loses" data-presets="endgame" data-reveal="game"></div>
+
+      <div data-after-check="game" hidden>
+        <p class="rule"><b>Leave an odd number of single stones.</b> Then your opponent has to take them one at a time, and the last one is theirs.</p>
+        <p>That is the whole twist. Put it together with the last scene and you have the complete code:</p>
+        <ol class="codecard">
+          <li><b>1</b><span>Two or more rows have more than one stone: make every binary column even.</span></li>
+          <li><b>2</b><span>One big row left: leave an <u>odd</u> number of single stones.</span></li>
+          <li><b>3</b><span>Only single stones left: leave an <u>odd</u> number.</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===================== 6: you're in ===================== -->
+    <section class="chapter" id="s6" aria-labelledby="h-s6">
+      <p class="kicker">Scene 6</p>
+      <h2 id="h-s6">You're in</h2>
+      <p class="lede">Three rows: 3, 5, 7. The last stone loses. You go first, and now you know the code. The binary view and the hint are there if you want them.</p>
+
+      <div class="mn-board" data-default="3,5,7" data-first="human" data-last="loses" data-columns="live" data-reveal="win"></div>
+
+      <div data-after-check="win" hidden>
+        <h3>You're in</h3>
+        <p>You just beat something most people can't. Three things before you go:</p>
+        <ol class="plain">
+          <li>Your opening move from 3 · 5 · 7 is always the same: take 1 stone from any row.</li>
+          <li>Don't explain it. Hand someone the game, let them lose, and let them ask. Then ask what they think the bot is doing. That is how you found it.</li>
+          <li>If you ever lose from a winning position, you slipped. Check the columns, then the twist.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===================== appendix: why it works ===================== -->
+    <section class="chapter" id="why" aria-labelledby="h-why">
+      <p class="kicker">Optional</p>
+      <h2 id="h-why">Why it always works</h2>
+      <p class="lede">A pattern is not a proof. A game tree is: it lists every possible game from a starting pile.</p>
+      <p>Press <b>Step</b> and the tree labels positions from the bottom up, using one rule: a position is <b>winning</b> if at least one move leads to a losing position, and <b>losing</b> otherwise. (Flip <b>Last stone</b> to loses and watch 0 stones turn into a win.)</p>
+
+      <section class="panel" aria-label="Game tree">
+        <div class="nim-controls">
+          <label>Stones <select id="tree-n"></select></label>
+          <label>Take up to <select id="tree-max"></select></label>
+          <label>Last stone <select id="tree-last"><option value="wins" selected>wins</option><option value="loses">loses</option></select></label>
+        </div>
+        <p id="tree-note" class="muted" hidden>With the last stone losing, 0 stones is a <b>win</b> for the player to move (the other player just took the last stone), and 1 stone is a <b>loss</b>, because you are forced to take it.</p>
+        <div class="row tree-btns">
+          <span>
+            <button id="tree-step" class="setup">Step</button>
+            <button id="tree-all" class="setup">Solve all</button>
+            <button id="tree-reset" class="setup">Reset</button>
+          </span>
+          <label class="check"><input type="checkbox" id="tree-best"> Highlight winning moves</label>
+        </div>
+        <p id="tree-explain" class="tree-explain" role="status" aria-live="polite"></p>
+        <div class="legend">
+          <span><svg width="16" height="16" aria-hidden="true"><circle cx="8" cy="8" r="7" class="tn tn-w"/></svg> player to move wins</span>
+          <span><svg width="16" height="16" aria-hidden="true"><rect x="1" y="1" width="14" height="14" rx="3" class="tn tn-l"/></svg> player to move loses</span>
+          <span>columns: <b>1st</b>/<b>2nd</b> player picks</span>
+        </div>
+        <div class="tree-scroll"><svg id="tree-svg" role="img" aria-label="Game tree for Nim"></svg></div>
+      </section>
+
+      <details class="hint">
+        <summary>With the last stone winning: why is 4 a square but 5 a circle?</summary>
+        <p>From 4 you can leave 3, 2 or 1 stones, and all of those are circles: whoever moves next can take everything. Every move you have helps your opponent, so 4 is losing. From 5 you can take 1 and leave 4, a square, so 5 is winning.</p>
+      </details>
+      <details class="hint">
+        <summary>What do the thick green lines mean?</summary>
+        <p>With <b>Highlight winning moves</b> on, a thick line is a winning move: one that leads from a circle to a square. Every circle has at least one and no square has any. That is all a strategy is: always take a thick line.</p>
+      </details>
+    </section>
+  </main>
+
+  <script src="nim.js?v=31528e3d"></script>
+  <script src="multinim.js?v=2db28cc2"></script>
+  <script src="misere.js?v=514e05f3"></script>
+  <script src="binary.js?v=24928403"></script>
+  <script src="nim-ui.js?v=40cf1c0f"></script>
+  <script src="multinim-ui.js?v=0e78af07"></script>
+  <script src="pairing.js?v=21dfe612"></script>
+  <script src="predict.js?v=c3cec1bd"></script>
+  <script src="tree.js?v=c4ca6b0e"></script>
+  <script src="tree-ui.js?v=e74408a6"></script>
+  <script src="journey.js?v=3f67615c"></script>
+  <script src="presenter.js?v=64f53eb9"></script>
+  <script src="demo.js?v=00b7560a"></script>
+</body>
+</html>
