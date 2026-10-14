@@ -292,3 +292,36 @@ body.present .chapter { margin-top: 0; }
 .pbar-help { flex-basis: 100%; font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 6px; }
 .pbar-help p { margin: 2px 0; }
 .pbar-help b { color: var(--text); }
+
+/* ---- Rule lab (rulelab-ui.js) ---- */
+.rl-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px; }
+.rl-chip { font: inherit; min-width: 38px; min-height: 38px; border: 1px solid var(--line); border-radius: 3px; background: none; color: var(--text); cursor: pointer; }
+.rl-chip[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); background: var(--wash); font-weight: 600; }
+.rl-strip .pcell { position: relative; min-width: 40px; min-height: 40px; }
+.rl-v { position: absolute; right: 3px; bottom: 1px; font-size: 0.62rem; opacity: 0.85; }
+.pcell.rl-hit { outline: 3px solid var(--text); outline-offset: 2px; }
+.pcell.rl-now { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rl-after { margin-top: 10px; }
+.rl-proof { margin-top: -4px; }
+.rl-plot { margin: 14px 0 0; }
+.rl-plot svg { display: block; width: 100%; height: auto; }
+.rl-axis { stroke: var(--line); stroke-width: 1; }
+.rl-mark { stroke: var(--accent); stroke-width: 1; stroke-dasharray: 3 3; }
+.rl-tick { font: 10px system-ui, sans-serif; fill: var(--muted); }
+.rl-dot { fill: var(--text); }
+.rl-dot.rl-zero { fill: var(--loss); }
+.rl-rows { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 12px; }
+.rl-rows input { font: inherit; font-size: 0.95rem; padding: 6px 8px; width: 9em; border: 1px solid var(--line); border-radius: 3px; background: var(--bg); color: var(--text); }
+.rl-rows-out { font-variant-numeric: tabular-nums; }
+
+/* ---- Microscope (microscope.js, scenes 2 and 3) ---- */
+.ms-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); gap: 6px; margin-top: 10px; }
+.ms-pos { border: 1px solid var(--line); border-radius: 3px; padding: 6px 4px; text-align: center; font-variant-numeric: tabular-nums; }
+.ms-dots { font-family: var(--serif); font-weight: 600; white-space: nowrap; }
+.ms-bin { margin-top: 4px; font: 0.82rem/1.25 ui-monospace, "Cascadia Mono", Consolas, monospace; letter-spacing: 0.12em; }
+.ms-count { display: flex; justify-content: center; gap: 0.62em; margin-top: 3px; padding-top: 2px; border-top: 1px solid var(--line); color: var(--muted); letter-spacing: 0; }
+.ms-count .odd { color: var(--loss); font-weight: 700; }
+.ms-pos.ms-bal { border-color: var(--win); }
+.ms-pos.ms-odd { border: 2px dashed var(--loss); }
+.proof { padding-left: 22px; }
+.proof li { margin: 6px 0; }
