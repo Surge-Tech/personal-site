@@ -32,12 +32,11 @@ const PROJECTS: Project[] = [
     tags: ['JavaScript', 'Interactive', 'Utility'],
   },
   {
-    title: 'BoozyDB',
-    repo: 'Surge-Tech/boozy-db',
-    demoUrl: '/boozydb/',
+    title: 'The Last Stone',
+    demoUrl: '/last-stone/',
     description:
-      'A cocktail recipe catalog with a static web app and a Python CLI. Browse 100+ classic and modern recipes with SVG glass illustrations, spirit color coding, and method badges. Recipes are stored as plain JSON files — no database required.',
-    tags: ['Python', 'TypeScript', 'CLI', 'Static Site'],
+      'An interactive talk on Nim, a game that can be solved. You play a bot that never loses, shrink the game until the pattern shows, then crack it with binary and try the strategy on the full three-row game. Built for a live audience, with a presenter mode, and every claim checked against independent Python brute force.',
+    tags: ['JavaScript', 'Game Theory', 'Binary', 'Interactive'],
   },
 ]
 
