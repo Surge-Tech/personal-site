@@ -271,7 +271,9 @@
       setup(o = {}) {
         if (o.start) R.start.value = o.start;
         if (o.first) R.first.value = o.first;
-        if (o.last) { R.last.value = o.last; tally.win = 0; tally.loss = 0; }
+        // Reset the score only when the rule really changes: scene 0's "game 2, the bot goes first" passes the same
+        // last-stone rule again, and wiping the volunteer's first loss there would keep the Nimatron line hidden.
+        if (o.last && o.last !== R.last.value) { R.last.value = o.last; tally.win = 0; tally.loss = 0; }
         if (o.bot !== undefined) R.bot.value = String(o.bot);
         newGame();
       },

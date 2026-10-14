@@ -4,18 +4,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>The Last Stone</title>
-  <link rel="stylesheet" href="style.css?v=c657683e">
+  <link rel="stylesheet" href="style.css?v=82259c74">
 </head>
 <body>
   <nav class="journey" aria-label="Scenes">
     <div class="journey-inner">
-      <a href="#s0"><b>0</b><span>Nobody beats it</span></a>
-      <a href="#s1"><b>1</b><span>One number</span></a>
-      <a href="#s2"><b>2</b><span>It adapts</span></a>
-      <a href="#s3"><b>3</b><span>The real game</span></a>
-      <a href="#s4"><b>4</b><span>The binary code</span></a>
-      <a href="#s5"><b>5</b><span>The twist</span></a>
-      <a href="#s6"><b>6</b><span>You're in</span></a>
+      <a href="#s0"><b>0</b><span>The hustle</span></a>
+      <a href="#s1"><b>1</b><span>Shrink it</span></a>
+      <a href="#s2"><b>2</b><span>The microscope</span></a>
+      <a href="#s3"><b>3</b><span>The crack</span></a>
+      <a href="#s4"><b>4</b><span>Revenge</span></a>
+      <a href="#s5"><b>5</b><span>Break the rules</span></a>
+      <a href="#s6"><b>6</b><span>The classroom</span></a>
       <a href="#why"><b>A</b><span>Why it works</span></a>
     </div>
   </nav>
@@ -23,131 +23,165 @@
   <main>
     <header>
       <h1>The Last Stone</h1>
-      <p class="sub">There is a game you can't lose once you know the code. Most people never learn it. In a few minutes, you will.</p>
+      <p class="sub">A game that has been beating people since 1940. Lose first. Then work out why.</p>
       <p class="muted"><button type="button" class="link" id="enter-present">Presenter mode</button> &middot; big type, one scene at a time, keyboard or clicker</p>
     </header>
 
-    <!-- ===================== 0: nobody beats it ===================== -->
+    <!-- ===================== 0: the hustle ===================== -->
     <section class="chapter" id="s0" aria-labelledby="h-s0">
       <p class="kicker">Scene 0</p>
-      <h2 id="h-s0">Nobody beats it</h2>
-      <p class="lede">Fifteen stones in a pile. You and the bot take turns taking 1, 2 or 3 stones. Whoever takes the <em>last</em> stone wins. The bot goes first. Beat it.</p>
+      <h2 id="h-s0">The hustle</h2>
+      <p class="lede">Three rows of stones: 3, 5 and 7. On your turn, take as many as you like from <em>one</em> row. Whoever takes the last stone <b>loses</b>. That's the whole game.</p>
+      <p>One of you plays the bot up front. Everyone else is on their team: shout advice.</p>
 
-      <div class="nim-board" data-first="bot" data-reveal="2losses" data-hide="last"></div>
+      <div class="mn-board" data-default="3,5,7" data-first="human" data-last="loses" data-presets="classic" data-reveal="2losses"></div>
 
-      <p class="bridge" data-after-check="2losses" hidden>Still losing? Good. It isn't lucky and it isn't guessing. It knows something, and in about a minute, so will you.</p>
+      <p class="bridge" data-after-check="2losses" hidden>In 1940 a machine called the Nimatron played this kind of game at the New York World's Fair. It played about 100,000 games and won about 90% of them, and most of the games it lost were reportedly lost on purpose by the staff, so people would keep lining up. People have been hustling crowds with this game for 85 years. Today you work out how.</p>
     </section>
 
-    <!-- ===================== 1: one number ===================== -->
+    <!-- ===================== 1: shrink it ===================== -->
     <section class="chapter" id="s1" aria-labelledby="h-s1">
       <p class="kicker">Scene 1</p>
-      <h2 id="h-s1">One number</h2>
-      <p class="lede">The bot isn't clever. It is keeping track of one number. Find it.</p>
+      <h2 id="h-s1">Shrink it</h2>
+      <p class="lede">When a problem is too big, solve a smaller one. One pile. Take 1, 2 or 3 stones. For now, whoever takes the last stone <b>wins</b>.</p>
       <p>Mark every pile size where the player about to move is <b>doomed</b>, however well they play. Start from the end: with 0 stones left it's your move, but the other player just took the last stone, so you've already lost. Then work upward. A size is doomed if every move you have hands your opponent a size that isn't.</p>
 
       <section class="panel"><div class="predict" data-rules="1-3" data-n="24"></div></section>
 
       <div data-after-check hidden>
         <p class="rule"><b>The doomed sizes are the multiples of 4: 0, 4, 8, 12, 16…</b> Hand your opponent one of them and you can't lose.</p>
+        <p>Notice what you just did. You didn't guess. You started at the end and worked backward. That's called <b>backward induction</b>, and it is the method for the rest of this talk.</p>
 
         <h3>Why it can't fail</h3>
-        <p>Whatever you take, the code takes the rest of a four. Try to break it.</p>
+        <p>Whatever they take, you take the rest of a four. Try to break it.</p>
         <section class="panel"><div class="pairing"></div></section>
 
         <h3>Your turn</h3>
         <p>You go first from 15. Fifteen isn't a multiple of 4. What's your first move?</p>
         <div class="nim-board" data-first="human" data-reveal="win" data-hide="last,bot"></div>
 
-        <p class="bridge" data-after-check="win" hidden>That's the first half of the code. Keep it. It's about to get bigger.</p>
+        <p class="bridge" data-after-check="win" hidden>One pile: solved. Now back to the three rows.</p>
       </div>
     </section>
 
-    <!-- ===================== 2: it adapts ===================== -->
+    <!-- ===================== 2: the microscope ===================== -->
     <section class="chapter" id="s2" aria-labelledby="h-s2">
       <p class="kicker">Scene 2</p>
-      <h2 id="h-s2">It adapts</h2>
-      <p class="lede">Change the rules and the number changes. Take up to 5 instead of 3: is the number still 4? Predict first, then check.</p>
-      <p>Then flip <b>Last stone</b> to <b>loses</b> and predict again.</p>
+      <h2 id="h-s2">The microscope</h2>
+      <p class="lede">Can we work backward on three rows? Each row can be anywhere from empty to full: 4 × 6 × 8 = 192 positions. That's too many for us. It isn't too many for a computer.</p>
+      <p>Press the button. The computer plays out every possible game from every one of those positions and keeps the ones where the player about to move is doomed. (The last stone still loses.)</p>
 
-      <section class="panel"><div class="predict" data-rules="pick" data-n="30"></div></section>
+      <section class="panel"><div class="microscope" data-start="3,5,7" data-binary="off"></div></section>
 
       <div data-after-check hidden>
-        <p class="rule">If you can take 1 up to <i>k</i> stones, the doomed sizes are the multiples of <i>k</i> + 1. Whatever they take, you take the rest of a <i>k</i> + 1.</p>
-        <p>With the last stone <b>losing</b>, everything slides over by one: the doomed sizes are 1, and then every <i>k</i> + 1 after that (1, 5, 9… for take 1 to 3). Having no stones left stops being doomed. It means the other player just took the last stone, so you have already won.</p>
-        <p>Strange rules, like "take 1, 3 or 4", have no pattern that tidy. They still repeat, every 7.</p>
-        <p class="bridge">Same code, new number. The code adapts to the rules. Remember that.</p>
+        <p class="bridge">The computer can tell us <em>which</em> positions are doomed. It can't tell us <em>why</em>. That part is our job.</p>
+        <details class="hint">
+          <summary>Stuck?</summary>
+          <p>Look at 0 · 3 · 3 and 0 · 5 · 5. Then 1 · 2 · 3, 1 · 4 · 5 and 2 · 4 · 6. In each one, the biggest row seems to be built from the other two. Built how?</p>
+        </details>
       </div>
     </section>
 
-    <!-- ===================== 3: the real game ===================== -->
+    <!-- ===================== 3: the crack ===================== -->
     <section class="chapter" id="s3" aria-labelledby="h-s3">
       <p class="kicker">Scene 3</p>
-      <h2 id="h-s3">Three rows</h2>
-      <p class="lede">Now the real game. Three rows of stones: 3, 5 and 7. On your turn, take as many as you like from <em>one</em> row. Whoever takes the last stone <b>loses</b>. The bot goes first.</p>
+      <h2 id="h-s3">The crack</h2>
+      <p class="lede">Here are the same 24 doomed positions. Write each row in binary, where every digit stands for a power of 2: 4, 2 and 1. Then count the 1s in each column.</p>
 
-      <div class="mn-board" data-default="3,5,7" data-first="bot" data-last="loses" data-presets="classic" data-reveal="2losses"></div>
-
-      <p class="bridge" data-after-check="2losses" hidden>Same bot. Same result. But it isn't one number anymore. It's all three rows at once. Where would you even start?</p>
-    </section>
-
-    <!-- ===================== 4: the binary code ===================== -->
-    <section class="chapter" id="s4" aria-labelledby="h-s4">
-      <p class="kicker">Scene 4</p>
-      <h2 id="h-s4">Count the ones</h2>
-      <p class="lede">Here is how to see every row at once. Write each row in binary. Every digit stands for a power of 2: 8, 4, 2 and 1.</p>
-      <p>Count the 1s in each column. If every column has an even number of 1s, call the position <b>balanced</b>. Click around and look for the balanced ones.</p>
-
-      <section class="panel"><div class="binlab" data-piles="1,2,3"></div></section>
+      <section class="panel"><div class="microscope" data-start="3,5,7" data-binary="toggle"></div></section>
 
       <div data-after-check hidden>
-        <p class="rule"><b>Whoever has to move from a balanced position is doomed.</b> Hand your opponent a balanced position and you are in control.</p>
-        <p>That is true whether the last stone wins or loses, as long as at least two rows still have more than one stone. Hold on to that "as long as". It matters next.</p>
+        <p class="rule"><b>Balanced:</b> every binary column has an even number of 1s. Twenty of the twenty-four doomed positions are balanced.</p>
 
-        <details class="hint">
-          <summary>Why does it work?</summary>
-          <p>There are three facts to check. First, with no stones left every column is even, so the finished game is balanced. Second, from a balanced position any move changes one row, which flips at least one of its digits, so some column turns odd: every move from a balanced position unbalances it. Third, from an unbalanced position there is always a move that balances it. Find the leftmost odd column, pick a row with a 1 there, and flip that row's digits in every odd column. Its leftmost flipped digit goes from 1 to 0, so the row gets smaller and the move is legal. Charles Bouton proved this in 1901.</p>
-        </details>
-
-        <p class="bridge">That is the code for the middle of the game. At the very end, it breaks.</p>
-      </div>
-    </section>
-
-    <!-- ===================== 5: the twist ===================== -->
-    <section class="chapter" id="s5" aria-labelledby="h-s5">
-      <p class="kicker">Scene 5</p>
-      <h2 id="h-s5">The twist</h2>
-      <p class="lede">When the last stone <b>loses</b>, one thing changes, and only at the very end. Here are some endings: one big row, plus a few single stones. You go first. Find the move that wins.</p>
-
-      <div class="mn-board" data-default="4,1" data-first="human" data-last="loses" data-presets="endgame" data-reveal="game"></div>
-
-      <div data-after-check="game" hidden>
-        <p class="rule"><b>Leave an odd number of single stones.</b> Then your opponent has to take them one at a time, and the last one is theirs.</p>
-        <p>That is the whole twist. Put it together with the last scene and you have the complete code:</p>
-        <ol class="codecard">
-          <li><b>1</b><span>Two or more rows have more than one stone: make every binary column even.</span></li>
-          <li><b>2</b><span>One big row left: leave an <u>odd</u> number of single stones.</span></li>
-          <li><b>3</b><span>Only single stones left: leave an <u>odd</u> number.</span></li>
+        <h3>Why it works</h3>
+        <ol class="proof">
+          <li><b>From a balanced position, every move breaks the balance.</b> A move changes one row, which flips at least one of its digits, so that column turns odd.</li>
+          <li><b>From an unbalanced position, you can always restore it.</b> Find the leftmost odd column and pick a row with a 1 there. Flip that row's digits in every odd column. Its leftmost flipped digit goes from 1 to 0, so the row gets smaller and the move is legal.</li>
         </ol>
+        <p>So whoever hands over a balanced position keeps control, move after move. That's the whole proof. Charles Bouton published it in 1901.</p>
+
+        <h3>Try it</h3>
+        <p>Build any position. If it's unbalanced, the button finds the move that restores the balance.</p>
+        <section class="panel"><div class="binlab" data-piles="4,5,6"></div></section>
+
+        <h3>The twist</h3>
+        <p>The other four doomed positions are 0 · 0 · 1, 0 · 1 · 0, 1 · 0 · 0 and 1 · 1 · 1: nothing but single stones, an odd number of them. And four balanced positions never made the list: 0 · 1 · 1, 1 · 0 · 1, 1 · 1 · 0 and the empty board. Because the last stone <b>loses</b>, the very end flips.</p>
+        <p>Play exactly as if the last stone wins, until only one row has more than one stone. Then leave an <b>odd</b> number of single stones. Try these endings. You go first.</p>
+
+        <div class="mn-board" data-default="5,1,1" data-first="human" data-last="loses" data-presets="endgame" data-reveal="game"></div>
+
+        <div data-after-check="game" hidden>
+          <p>That's the complete code:</p>
+          <ol class="codecard">
+            <li><b>1</b><span>Two or more rows have more than one stone: make every binary column even.</span></li>
+            <li><b>2</b><span>One big row left: leave an <u>odd</u> number of single stones.</span></li>
+            <li><b>3</b><span>Only single stones left: leave an <u>odd</u> number.</span></li>
+          </ol>
+        </div>
       </div>
     </section>
 
-    <!-- ===================== 6: you're in ===================== -->
-    <section class="chapter" id="s6" aria-labelledby="h-s6">
-      <p class="kicker">Scene 6</p>
-      <h2 id="h-s6">You're in</h2>
-      <p class="lede">Three rows: 3, 5, 7. The last stone loses. You go first, and now you know the code. The binary view and the hint are there if you want them.</p>
+    <!-- ===================== 4: revenge ===================== -->
+    <section class="chapter" id="s4" aria-labelledby="h-s4">
+      <p class="kicker">Scene 4</p>
+      <h2 id="h-s4">Revenge</h2>
+      <p class="lede">Rematch. Three rows: 3, 5, 7. The last stone loses. You go first, and this time you know the code. The binary view and the hint are there if you need them. Try not to.</p>
 
       <div class="mn-board" data-default="3,5,7" data-first="human" data-last="loses" data-columns="live" data-reveal="win"></div>
 
       <div data-after-check="win" hidden>
         <h3>You're in</h3>
-        <p>You just beat something most people can't. Three things before you go:</p>
+        <p>You just beat the machine that beat you. Three things before you go:</p>
         <ol class="plain">
           <li>Your opening move from 3 · 5 · 7 is always the same: take 1 stone from any row.</li>
-          <li>Don't explain it. Hand someone the game, let them lose, and let them ask. Then ask what they think the bot is doing. That is how you found it.</li>
+          <li>Don't explain it right away. Hand someone the game, let them lose, and let them ask. Then teach them how. That second part is the job.</li>
           <li>If you ever lose from a winning position, you slipped. Check the columns, then the twist.</li>
         </ol>
       </div>
+    </section>
+
+    <!-- ===================== 5: break the rules ===================== -->
+    <section class="chapter" id="s5" aria-labelledby="h-s5">
+      <p class="kicker">Scene 5</p>
+      <h2 id="h-s5">Break the rules</h2>
+      <p class="lede">You've beaten the game. Now change it. Pick a rule, or make up your own, and the computer will solve the new game.</p>
+      <p>Predict first. Tap every row size you think is <b>doomed</b> for the player about to move, then press <b>Solve</b> and watch the computer work its way up from 0, the same way you did with one pile.</p>
+
+      <section class="panel"><div class="rulelab" data-n="36" data-rule="1,4"></div></section>
+
+      <div data-after-check hidden>
+        <h3>The numbers in the corners</h3>
+        <p>Turn on <b>Show Nim values</b>. Each row size gets a number: the size of the ordinary Nim row it secretly behaves like. To judge several rows at once, write those numbers in binary and check the columns, exactly as in scene 3. That is the Sprague–Grundy theorem (1930s): <em>every</em> game where both players have the same moves and nobody can draw is Nim in disguise.</p>
+        <h3>Where the computer runs out</h3>
+        <p>Try <b>Split a row into two unequal rows</b>. That is Grundy's game. For small sizes the pattern looks like it repeats every 3, then it stops. Computers have worked out its values for enormous rows, and nobody knows whether it ever repeats. The computer can find a pattern. Only a proof can promise it lasts.</p>
+        <p class="bridge">Your turn: find a rule whose pattern surprises you, then try to explain it.</p>
+      </div>
+    </section>
+
+    <!-- ===================== 6: the classroom ===================== -->
+    <section class="chapter" id="s6" aria-labelledby="h-s6">
+      <p class="kicker">Scene 6</p>
+      <h2 id="h-s6">Why this belongs in a classroom</h2>
+      <p class="lede">You just went through the whole cycle a math class is supposed to have: lose, wonder, investigate, prove, extend. Nobody had to be told why it mattered. You wanted revenge.</p>
+
+      <h3>The math in it</h3>
+      <ul class="plain">
+        <li>Patterns and remainders: multiples of 4, then of <i>k</i> + 1.</li>
+        <li>Place value in another base, and parity: binary columns, even and odd.</li>
+        <li>Working backward from the end: backward induction, the idea behind recursion.</li>
+        <li>A real proof: two facts, and the game is solved.</li>
+        <li>Conjecture from data, and the difference between evidence and proof.</li>
+      </ul>
+
+      <h3>What the computer did</h3>
+      <ul class="plain">
+        <li><b>Opponent:</b> it played perfectly, so losing was honest.</li>
+        <li><b>Microscope:</b> it checked 192 positions so you could look for the pattern.</li>
+        <li><b>Lab:</b> it solved any rule you invented, in seconds.</li>
+        <li><b>Frontier:</b> it went further than any person can, and still couldn't promise Grundy's game a pattern.</li>
+      </ul>
+
+      <p class="bridge">The dare: go hustle someone this week. Then teach them how.</p>
     </section>
 
     <!-- ===================== appendix: why it works ===================== -->
@@ -197,13 +231,16 @@
   <script src="misere.js?v=514e05f3"></script>
   <script src="binary.js?v=24928403"></script>
   <script src="nim-ui.js?v=40cf1c0f"></script>
-  <script src="multinim-ui.js?v=0e78af07"></script>
+  <script src="multinim-ui.js?v=244b236b"></script>
+  <script src="microscope.js?v=4c46e24b"></script>
   <script src="pairing.js?v=21dfe612"></script>
   <script src="predict.js?v=c3cec1bd"></script>
+  <script src="rulelab.js?v=32e28849"></script>
+  <script src="rulelab-ui.js?v=60cd32d8"></script>
   <script src="tree.js?v=c4ca6b0e"></script>
   <script src="tree-ui.js?v=e74408a6"></script>
   <script src="journey.js?v=3f67615c"></script>
   <script src="presenter.js?v=64f53eb9"></script>
-  <script src="demo.js?v=00b7560a"></script>
+  <script src="demo.js?v=e1c3919a"></script>
 </body>
 </html>

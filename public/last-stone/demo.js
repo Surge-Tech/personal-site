@@ -7,9 +7,10 @@
 //   Demo.line("s0", [2, 1, 3])         play a list of human moves (a number on one-pile boards, [row, take] on multi-row boards)
 //   Demo.perfect("s1")                 play the human side perfectly until the game ends
 //   Demo.mark("s1", [4, 8, 12]); Demo.check("s1"); Demo.show("s1")      the predict strip
-//   Demo.rule("s2", "1-5", true)       choose a rule set (and last stone loses) on a picker strip
 //   Demo.handshake("s1", [1, 3, 2, 2]) the pairing widget
 //   Demo.lab([4, 5, 6]); Demo.labMove()   the binary lab
+//   Demo.scan("s2", false); Demo.binary("s3")   the microscope: check all 192 positions, then show them in binary
+//   Demo.rules("1,4", {mark: [2, 5]}); Demo.ruleSolve(); Demo.ruleRows([3, 5, 7])   the rule lab ("L" scene)
 //   Demo.state("s3")                   what is on a board right now (for narration / checks)
 //   Demo.dryRun()                      run every demo in the script and report pass / fail (used before a talk)
 (function () {
@@ -125,6 +126,25 @@
     lab(piles) { const el = document.querySelector(".binlab"); el.binlab.set(piles); return el.binlab.state(); },
     labMove() { document.querySelector(".binlab").binlab.showMove(); },
 
+    // The rule lab. `rule` is a preset id ("1,4", "kayles", "grundy") or a list of take amounts for "Your own".
+    //   opts: { loses: true } last stone loses (take rules only), { mark: [..] } a prediction, { solve: true } solve instantly
+    ruleLab() { const el = document.querySelector(".rulelab"); if (!el || !el.rulelab) throw new Error("no rule lab"); return el.rulelab; },
+    rules(rule, opts = {}) {
+      const L = Demo.ruleLab();
+      Array.isArray(rule) ? L.setMoves(rule) : L.setRule(rule);
+      if (opts.loses) L.setLast(true);
+      if (opts.mark) L.mark(...opts.mark);
+      if (opts.solve) L.solve(true);
+      return L.state();
+    },
+    ruleSolve(instant = false) { Demo.ruleLab().solve(instant); },       // animated by default: the room watches it work upward
+    ruleRows(rows) { return Demo.ruleLab().rows(rows); },
+
+    // The microscope (scenes 2 and 3): every position inside 3 · 5 · 7, and the doomed ones.
+    microscope(id) { const el = scene(id).querySelector(".microscope"); if (!el || !el.microscope) throw new Error(`no microscope in ${id}`); return el.microscope; },
+    scan(id, instant = true) { Demo.microscope(id).run(instant); },        // pass false to let the room watch it count
+    binary(id, on = true) { Demo.microscope(id).binary(on); },
+
     // ----- Dry run: every demo the script uses, with checks. Run before a talk (then reload the page). -----
     async dryRun() {
       const results = [];
@@ -133,17 +153,23 @@
       const hiddenIn = (id) => [...scene(id).querySelectorAll("[data-after-check]")].filter((n) => n.hidden).length;
 
       Demo.go("s0");
-
-      await guard("D1 wall: bot first at 15, the human loses", async () => {
-        Demo.setup("s0", { first: "bot", bot: 0 });
+      await guard("D1 hustle", async () => {
+        // a careless volunteer who goes first still loses to the perfect bot
+        Demo.setup("s0", { start: "3,5,7", first: "human", last: "loses", bot: 0 });
         const before = hiddenIn("s0");
-        await Demo.line("s0", [2, 1, 3, 3, 1, 2, 3], { pause: 150, beat: 120 });
-        const s = Demo.state("s0");
-        check("D1 wall: the bot wins", s.turn === "over" && /Bot wins/.test(s.status), s.status);
-        // the second loss reveals the hook line
-        Demo.setup("s0", { first: "bot", bot: 0 });
-        await Demo.line("s0", [1, 1, 1, 1, 1, 1, 1, 1], { pause: 150, beat: 120 });
-        check("D1 wall: the hook line appears after two losses", hiddenIn("s0") < before, `hidden ${before} -> ${hiddenIn("s0")}`);
+        let s = await Demo.line("s0", [[2, 3], [1, 2], [0, 1], [2, 1], [1, 1], [0, 1], [2, 1], [1, 1], [0, 1]], { pause: 150, beat: 120 });
+        check("D1 hustle: game 1, the bot beats a careless volunteer", s.turn === "over" && /Bot wins/.test(s.status), s.status);
+        // game 2: bot first, held for the presenter; press B and check its opening
+        Demo.setup("s0", { start: "3,5,7", first: "bot", last: "loses", bot: 0 });
+        await sleep(100);
+        Demo.botMove();
+        await sleep(700);
+        const rows = Demo.state("s0").rows;
+        const taken = [3 - rows[0], 5 - rows[1], 7 - rows[2]];
+        check("D1 hustle: game 2, the bot opens by taking exactly 1 from one row", taken.filter((t) => t === 1).length === 1 && taken.filter((t) => t === 0).length === 2, rows.join(","));
+        s = await Demo.line("s0", [[0, 2], [1, 1], [2, 1], [0, 1], [1, 1], [2, 1], [1, 1], [2, 1], [1, 1], [2, 1]], { pause: 150, beat: 120 });
+        check("D1 hustle: game 2, the bot wins again", s.turn === "over" && /Bot wins/.test(s.status), s.status);
+        check("D1 hustle: the Nimatron line appears after two losses", hiddenIn("s0") < before, `hidden ${before} -> ${hiddenIn("s0")}`);
       });
 
       Demo.go("s1");
@@ -152,7 +178,7 @@
         Demo.mark("s1", [4, 8, 9]); Demo.check("s1");
         const st = Demo.strip("s1").state();
         check("D2 predict: graded (2 right, 1 wrong)", st.checked && st.guess.length === 3, JSON.stringify(st.guess));
-        check("D2 predict: explanation revealed", hiddenIn("s1") === 1 || hiddenIn("s1") === 0, hiddenIn("s1"));   // the 'win'-staged line is still hidden
+        check("D2 predict: explanation revealed", hiddenIn("s1") <= 1, hiddenIn("s1"));   // the 'win'-staged line is still hidden
         Demo.clear("s1"); Demo.mark("s1", [4, 8, 12, 16, 20, 24]); Demo.check("s1");
         check("D2 predict: perfect answer", /All correct/.test(document.querySelector("#s1 .predict .tree-explain").textContent), document.querySelector("#s1 .predict .tree-explain").textContent);
       });
@@ -168,72 +194,78 @@
       });
 
       Demo.go("s2");
-      await guard("D5 adapts", async () => {
-        Demo.rule("s2", "1-5", false); Demo.show("s2");
-        const win = Demo.strip("s2").state().truth.join(",");
-        check("D5 take 1-5: multiples of 6", win === "0,6,12,18,24,30", win);
-        Demo.rule("s2", "1-5", true); Demo.show("s2");
-        const lose = Demo.strip("s2").state().truth.join(",");
-        check("D5 take 1-5, last stone loses: 1 mod 6", lose === "1,7,13,19,25", lose);
-        Demo.rule("s2", "1,3,4", false); Demo.show("s2");
-        check("D5 odd rule set shown", Demo.strip("s2").state().truth.join(",") === "0,2,7,9,14,16,21,23,28,30", Demo.strip("s2").state().truth.join(","));
+      await guard("D5 microscope", async () => {
+        const hid = hiddenIn("s2");
+        Demo.scan("s2", false);
+        await sleep(2600);                                          // 192 positions, 4 per 40 ms
+        const st = Demo.microscope("s2").state();
+        check("D5 microscope: all 192 checked, 24 doomed", st.checked === 192 && st.doomed.length === 24 && st.shown === 24, `${st.checked} / ${st.shown}`);
+        check("D5 microscope: starts 0·0·1, 0·1·0, 0·2·2, 0·3·3", st.doomed.slice(0, 4).join(" ") === "0,0,1 0,1,0 0,2,2 0,3,3", st.doomed.slice(0, 4).join(" "));
+        check("D5 microscope: the bridge appears after the scan", hiddenIn("s2") < hid, `${hid} -> ${hiddenIn("s2")}`);
       });
 
       Demo.go("s3");
-      await guard("D6 3-5-7 wall", async () => {
-        Demo.setup("s3", { start: "3,5,7", first: "bot", last: "loses", bot: 0 });
-        const s = await Demo.line("s3", [[2, 3], [1, 2], [0, 1], [2, 1], [1, 1], [0, 1], [2, 1], [1, 1], [0, 1]], { pause: 150, beat: 120 });
-        check("D6 3-5-7: the bot beats a careless human", s.turn === "over" && /Bot wins/.test(s.status), s.status);
-        // a fresh game: the bot is held for the presenter, so press B, then check its opening
-        Demo.setup("s3", { start: "3,5,7", first: "bot", last: "loses", bot: 0 });
-        await sleep(100);
+      await guard("D6 crack", async () => {
+        const hid = hiddenIn("s3");
+        Demo.binary("s3");
+        check("D6 binary view: 20 balanced, 4 odd ones out", document.querySelectorAll("#s3 .ms-bal").length === 20 && document.querySelectorAll("#s3 .ms-odd").length === 4,
+          `${document.querySelectorAll("#s3 .ms-bal").length} / ${document.querySelectorAll("#s3 .ms-odd").length}`);
+        check("D6 the odd ones out are the odd singles", Demo.microscope("s3").state().odd.join(" ") === "0,0,1 0,1,0 1,0,0 1,1,1", Demo.microscope("s3").state().odd.join(" "));
+        check("D6 the proof is revealed", hiddenIn("s3") < hid, `${hid} -> ${hiddenIn("s3")}`);
+        Demo.lab([4, 5, 6]); Demo.labMove();
+        const steps = [...document.querySelectorAll("#s3 .lab-steps li")].map((l) => l.textContent);
+        check("D6 lab: 4·5·6 -> take 1 from A", /taking 1 from row A, leaving 3 · 5 · 6/.test(steps[3] || ""), steps[3]);
+        // the twist: a wrong move first, then the right one
+        Demo.setup("s3", { start: "5,1,1", first: "human", last: "loses", bot: 0 });
+        await Demo.line("s3", [[0, 1]], { pause: 150, beat: 120 });
         Demo.botMove();
         await sleep(700);
-        const rows = Demo.state("s3").rows;
-        const taken = [3 - rows[0], 5 - rows[1], 7 - rows[2]];
-        check("D6 3-5-7: the bot opens by taking exactly 1 from one row", taken.filter((t) => t === 1).length === 1 && taken.filter((t) => t === 0).length === 2, rows.join(","));
+        check("D6 twist: after the wrong move the bot plays on", Demo.state("s3").turn !== "over", JSON.stringify(Demo.state("s3").rows));
+        Demo.setup("s3", { start: "5,1,1", first: "human", last: "loses", bot: 0 });
+        await Demo.line("s3", [[0, 4]], { pause: 150, beat: 120 });
+        await Demo.line("s3", [[0, 1], [1, 1], [2, 1]], { pause: 150, beat: 120 });
+        const end = Demo.state("s3");
+        check("D6 twist: the right move wins", /You win/.test(end.status), end.status);
+        check("D6 the code card appears after a game", hiddenIn("s3") === 0, hiddenIn("s3"));
       });
 
       Demo.go("s4");
-      await guard("D7 lab", async () => {
-        const hid = hiddenIn("s4");
-        for (const p of [[3, 5, 6], [4, 5, 6], [3, 4, 5], [5, 6, 7]]) Demo.lab(p);   // 5 distinct positions including the start
-        check("D7 lab: rule revealed after exploring", hiddenIn("s4") < hid, `${hid} -> ${hiddenIn("s4")}`);
-        Demo.lab([4, 5, 6]); Demo.labMove();
-        const steps = [...document.querySelectorAll("#s4 .lab-steps li")].map((l) => l.textContent);
-        check("D7 lab: winning-move walkthrough has 4 steps", steps.length === 4, steps.length);
-        check("D7 lab: 4·5·6 -> take 1 from A", /taking 1 from row A, leaving 3 · 5 · 6/.test(steps[3] || ""), steps[3]);
+      await guard("D7 revenge", async () => {
+        Demo.setup("s4", { start: "3,5,7", first: "human", last: "loses", bot: 0 });
+        document.querySelector("#s4 .nim-aux button").click();
+        const hint = [...document.querySelectorAll("#s4 .lab-steps li")].map((l) => l.textContent);
+        check("D7 revenge: hint at 3·5·7 says take 1 from row A", hint.length >= 4 && /taking 1 from row A, leaving 2 · 5 · 7/.test(hint.join(" ")), hint.join(" | ").slice(-110));
+        const s = await Demo.perfect("s4", { pause: 150, beat: 120 });
+        check("D7 revenge: the code beats the perfect bot", /You win/.test(s.status), s.status);
+        check("D7 revenge: closing lines appear", hiddenIn("s4") === 0, hiddenIn("s4"));
+        check("D7 revenge: the code card is visible", !document.querySelector("#s4 .codecard").hidden, "");
       });
 
       Demo.go("s5");
-      await guard("D8 twist", async () => {
-        // The wrong move first: from 5 · 1 · 1, taking 1 leaves 4 · 1 · 1, and the bot answers by shrinking the big row so three singles (odd) are left for you.
-        Demo.setup("s5", { start: "5,1,1", first: "human", last: "loses", bot: 0 });
-        await Demo.line("s5", [[0, 1]], { pause: 150, beat: 120 });
-        Demo.botMove();
-        await sleep(700);
-        const afterWrong = Demo.state("s5");
-        check("D8 twist: after the wrong move the bot plays on (game not over, bot has replied)", afterWrong.turn !== "over", JSON.stringify(afterWrong.rows));
-        // The right move: take 4, leaving three single stones (odd).
-        Demo.setup("s5", { start: "5,1,1", first: "human", last: "loses", bot: 0 });
-        await Demo.line("s5", [[0, 4]], { pause: 150, beat: 120 });
-        await Demo.line("s5", [[0, 1], [1, 1], [2, 1]], { pause: 150, beat: 120 });
-        const end = Demo.state("s5");
-        check("D8 twist: the right move wins", /You win/.test(end.status), end.status);
-        check("D8 twist: the rule is revealed after a game", hiddenIn("s5") === 0, hiddenIn("s5"));
+      await guard("D8 rule lab", async () => {
+        const hid = hiddenIn("s5");
+        let st = Demo.rules("1,4", { mark: [2, 5] });
+        Demo.ruleSolve();
+        await sleep(3200);                                       // the animated solve takes about 2.5 s for 36 sizes
+        st = Demo.ruleLab().state();
+        check("D8 take 1 or 4: animated solve finishes", st.solved, JSON.stringify(st));
+        check("D8 take 1 or 4: doomed 0, 2, 5, 7, 10, 12", st.losing.slice(0, 6).join(",") === "0,2,5,7,10,12", st.losing.join(","));
+        check("D8 take 1 or 4: repeats every 5, proven", st.pattern.period === 5 && st.proof === "proven", st.text);
+        check("D8 explanation revealed after a solve", hiddenIn("s5") < hid, `${hid} -> ${hiddenIn("s5")}`);
+        st = Demo.rules([1, 2], { loses: true, solve: true });
+        check("D8 own rule take 1 or 2, last loses: 1, 4, 7", st.losing.slice(0, 3).join(",") === "1,4,7" && st.misere, st.losing.join(","));
+        st = Demo.rules("kayles", { solve: true });
+        check("D8 Kayles: every 12 from 71, proven", st.pattern.period === 12 && st.pattern.pre === 71 && st.proof === "proven", st.text);
+        const rows = Demo.ruleRows([3, 5, 7]);
+        check("D8 Kayles rows 3, 5, 7 act like 3, 4, 2", /3 acts like 3 .*5 acts like 4 .*7 acts like 2 .*Combined: 101\. Not balanced/.test(rows), rows);
+        st = Demo.rules("grundy", { solve: true });
+        check("D8 Grundy's game: no repeat, not proven", st.pattern === null && st.proof === "none" && /No repeat/.test(st.text), st.text);
+        Demo.rules("1,4");                                       // leave it ready for the talk
       });
 
       Demo.go("s6");
-      await guard("D9 finale", async () => {
-        Demo.setup("s6", { start: "3,5,7", first: "human", last: "loses", bot: 0 });
-        document.querySelector("#s6 .nim-aux button").click();
-        const hint = [...document.querySelectorAll("#s6 .lab-steps li")].map((l) => l.textContent);
-        check("D9 finale: hint at 3·5·7 says take 1 from row A", hint.length >= 4 && /taking 1 from row A, leaving 2 · 5 · 7/.test(hint.join(" ")), hint.join(" | ").slice(-110));
-        const s = await Demo.perfect("s6", { pause: 150, beat: 120 });
-        check("D9 finale: the code beats the perfect bot", /You win/.test(s.status), s.status);
-        check("D9 finale: closing lines appear", hiddenIn("s6") === 0, hiddenIn("s6"));
-        const card = [...document.querySelectorAll("#s6 .codecard li")].map((l) => l.className);
-        check("D9 finale: the code card is visible in misere", !document.querySelector("#s6 .codecard").hidden, card.join("|"));
+      await guard("D9 classroom", async () => {
+        check("D9 the dare is on screen", /hustle someone this week/.test(scene("s6").textContent), "");
       });
 
       Demo.go("why");
