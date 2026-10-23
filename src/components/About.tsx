@@ -1,24 +1,20 @@
 import { useTheme } from '../context/ThemeContext'
 
-function PlaceholderAvatar({ isDark }: { isDark: boolean }) {
+function Headshot({ isDark }: { isDark: boolean }) {
   return (
     <div
-      role="img"
-      aria-label="Photo of Nata'ani Bitselley-Romo — placeholder until headshot is added"
-      className={`relative w-56 h-56 sm:w-64 sm:h-64 rounded-2xl flex items-center justify-center overflow-hidden border-2 ${isDark ? 'border-teal-500/30 bg-navy-800' : 'border-teal-500/20 bg-slate-100'}`}
+      className={`relative w-56 h-72 sm:w-64 sm:h-80 rounded-2xl overflow-hidden border-2 ${isDark ? 'border-teal-500/30 bg-navy-800' : 'border-teal-500/20 bg-slate-100'}`}
     >
-      {/* Silhouette */}
-      <svg
-        viewBox="0 0 100 100"
-        className={`w-4/5 h-4/5 ${isDark ? 'text-slate-600' : 'text-slate-300'}`}
-        fill="currentColor"
-        aria-hidden="true"
-      >
-        <circle cx="50" cy="36" r="18" />
-        <path d="M10 90 Q10 62 50 62 Q90 62 90 90Z" />
-      </svg>
+      <img
+        src="/headshot.webp"
+        alt="Nata'ani Bitselley-Romo smiling, wearing a teal and black checkered haori"
+        width={800}
+        height={1062}
+        loading="lazy"
+        className="w-full h-full object-cover object-top"
+      />
       {/* Teal corner accent */}
-      <div className="absolute bottom-0 right-0 w-16 h-16 bg-teal-500/20 rounded-tl-2xl" />
+      <div className="absolute bottom-0 right-0 w-16 h-16 bg-teal-500/20 rounded-tl-2xl" aria-hidden="true" />
     </div>
   )
 }
@@ -47,7 +43,7 @@ export default function About() {
         <div className="flex flex-col lg:flex-row items-center lg:items-start gap-12 lg:gap-16">
           {/* Photo */}
           <div className="flex-shrink-0">
-            <PlaceholderAvatar isDark={isDark} />
+            <Headshot isDark={isDark} />
           </div>
 
           {/* Bio + experience */}

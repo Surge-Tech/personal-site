@@ -8,6 +8,14 @@ function GitHubIcon() {
   )
 }
 
+function KofiIcon() {
+  return (
+    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3" />
+    </svg>
+  )
+}
+
 export default function Footer() {
   const { theme } = useTheme()
   const isDark = theme === 'dark'
@@ -20,16 +28,28 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} Nata&apos;ani Bitselley-Romo
           </p>
 
-          <a
-            href="https://github.com/Surge-Tech"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Surge-Tech on GitHub"
-            className={`inline-flex items-center gap-1.5 text-sm transition-colors ${isDark ? 'text-slate-500 hover:text-teal-400' : 'text-slate-400 hover:text-teal-600'}`}
-          >
-            <GitHubIcon />
-            GitHub
-          </a>
+          <div className="flex items-center gap-5">
+            <a
+              href="https://github.com/Surge-Tech"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Surge-Tech on GitHub"
+              className={`inline-flex items-center gap-1.5 text-sm transition-colors ${isDark ? 'text-slate-500 hover:text-teal-400' : 'text-slate-400 hover:text-teal-600'}`}
+            >
+              <GitHubIcon />
+              GitHub
+            </a>
+            <a
+              href="https://ko-fi.com/surgetech"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Support me on Ko-fi"
+              className={`inline-flex items-center gap-1.5 text-sm transition-colors ${isDark ? 'text-slate-500 hover:text-teal-400' : 'text-slate-400 hover:text-teal-600'}`}
+            >
+              <KofiIcon />
+              Ko-fi
+            </a>
+          </div>
 
           <p className={`text-sm ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>
             Built with React + Vite

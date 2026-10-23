@@ -24,6 +24,14 @@ function MoonIcon() {
   )
 }
 
+function KofiIcon() {
+  return (
+    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3" />
+    </svg>
+  )
+}
+
 export default function Navbar() {
   const { theme, toggle } = useTheme()
   const [scrolled, setScrolled] = useState(false)
@@ -130,6 +138,16 @@ export default function Navbar() {
                 {isDark ? <SunIcon /> : <MoonIcon />}
               </button>
               <a
+                href="https://ko-fi.com/surgetech"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Support me on Ko-fi"
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-lg bg-teal-500 text-white hover:bg-teal-400 transition-colors"
+              >
+                <KofiIcon />
+                Support
+              </a>
+              <a
                 href="/resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -215,11 +233,22 @@ export default function Navbar() {
             </nav>
 
             <a
+              href="https://ko-fi.com/surgetech"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={closeMenu}
+              className="mt-6 py-3 inline-flex items-center justify-center gap-2 text-sm font-semibold rounded-lg bg-teal-500 text-white hover:bg-teal-400 transition-colors"
+            >
+              <KofiIcon />
+              Support me on Ko-fi
+            </a>
+
+            <a
               href="/resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
               onClick={closeMenu}
-              className="mt-6 py-3 text-center text-sm font-semibold rounded-lg border border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white transition-colors"
+              className="mt-3 py-3 text-center text-sm font-semibold rounded-lg border border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white transition-colors"
             >
               Download Resume
             </a>

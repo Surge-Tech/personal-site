@@ -9,6 +9,14 @@ function GitHubIcon() {
   )
 }
 
+function KofiIcon() {
+  return (
+    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3" />
+    </svg>
+  )
+}
+
 function CheckIcon() {
   return (
     <svg className="h-12 w-12 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
@@ -140,7 +148,7 @@ export default function Contact() {
           Your message is sent via Formspree and is not stored on this site.
         </p>
 
-        <div className="flex justify-center mt-8">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 mt-8">
           <a
             href="https://github.com/Surge-Tech"
             target="_blank"
@@ -150,6 +158,16 @@ export default function Contact() {
           >
             <GitHubIcon />
             github.com/Surge-Tech
+          </a>
+          <a
+            href="https://ko-fi.com/surgetech"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Support me on Ko-fi"
+            className={`inline-flex items-center gap-2 text-sm font-medium transition-colors ${isDark ? 'text-slate-400 hover:text-teal-400' : 'text-slate-500 hover:text-teal-600'}`}
+          >
+            <KofiIcon />
+            ko-fi.com/surgetech
           </a>
         </div>
       </div>
