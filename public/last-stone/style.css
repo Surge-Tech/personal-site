@@ -325,3 +325,49 @@ body.present .chapter { margin-top: 0; }
 .ms-pos.ms-odd { border: 2px dashed var(--loss); }
 .proof { padding-left: 22px; }
 .proof li { margin: 6px 0; }
+
+/* ---- Build the bot (scene 2) ---- */
+.bb-game { margin: 0 0 10px; }
+.bb-rules { list-style: none; margin: 0; padding: 0; counter-reset: bb; }
+.bb-rule { counter-increment: bb; border-top: 1px solid var(--line); padding: 10px 0 10px 34px; position: relative; line-height: 2.1; }
+.bb-rule::before { content: counter(bb); position: absolute; left: 0; top: 10px; font-family: var(--serif); font-weight: 600; font-size: 1.1rem; line-height: 2; color: var(--accent); }
+.bb-title { display: block; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 600; line-height: 1.6; }
+.bb-blank { display: inline-flex; flex-wrap: wrap; gap: 4px; margin: 0 3px; vertical-align: middle; }
+.bb-chip {
+  font: inherit; font-size: 0.88rem; line-height: 1.3; padding: 5px 10px; min-height: 34px; cursor: pointer;
+  border: 1px dashed var(--line); border-radius: 3px; background: none; color: var(--muted);
+}
+.bb-chip:hover:not(:disabled) { border-color: var(--text); color: var(--text); }
+.bb-chip[aria-pressed="true"] { border: 1px solid var(--accent); color: var(--text); background: var(--wash); box-shadow: inset 0 0 0 1px var(--accent); font-weight: 600; }
+.bb-chip:disabled { cursor: default; }
+.bb-chip:disabled:not([aria-pressed="true"]) { opacity: 0.35; }
+.bb-chip.bb-bad { border-color: var(--loss); box-shadow: inset 0 0 0 1px var(--loss); }
+.bb-why { margin: 2px 0 0; color: var(--loss); font-size: 0.9rem; line-height: 1.45; }
+.bb-launch { font-weight: 600; border-color: var(--accent); color: var(--accent); }
+.bb-run { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 14px; }
+.bb-stats b { font-family: var(--serif); }
+.bb-tedium { margin: 10px 0 12px; }
+.bb-speed { font-size: 0.8rem; }
+.bb-spot { min-height: 7.5em; margin: 6px 0 12px; padding: 10px 12px; background: var(--wash); border-radius: 3px; font-variant-numeric: tabular-nums; }
+.bb-spot-head { margin: 0; font-family: var(--serif); font-weight: 600; }
+.bb-tries { margin: 4px 0 0; padding-left: 20px; font-size: 0.88rem; color: var(--muted); }
+.bb-tries li { margin: 1px 0; }
+.bb-tries .bb-try-good { color: var(--win); font-weight: 600; }
+.bb-verdict { margin: 6px 0 0; font-size: 0.92rem; }
+.bb-verdict:empty { display: none; }
+.bb-grid-wrap { overflow-x: auto; }
+.bb-grid { --bb: 12px; display: flex; gap: 3px; align-items: flex-end; width: max-content; }
+.bb-col { display: flex; flex-direction: column-reverse; gap: 2px; align-items: center; }
+.bb-colhead { font-size: 0.68rem; color: var(--muted); line-height: 1.4; font-variant-numeric: tabular-nums; }
+.bb-cell { display: inline-block; width: var(--bb, 12px); height: var(--bb, 12px); border: 1px solid var(--line); border-radius: 2px; vertical-align: middle; transition: background-color 0.15s; }
+.bb-cell.bb-w { background: var(--win); border-color: var(--win); }
+.bb-cell.bb-d { background: var(--loss); border-color: var(--loss); }
+.bb-cell.bb-u { background: var(--wash); border: 1px dashed var(--pred); }
+.bb-tries .bb-try-odd { color: var(--pred); }
+.bb-cell.bb-now { outline: 2px solid var(--accent); outline-offset: 1px; }
+.bb-cell.bb-look { outline: 2px dashed var(--pred); outline-offset: 1px; }
+.bb-axis { margin: 4px 0 0; font-size: 0.78rem; }
+@media (min-width: 560px) { .bb-grid { --bb: 15px; gap: 5px; } }
+.ms-pos.bb-new { animation: bb-in 0.35s ease-out; }
+@keyframes bb-in { from { opacity: 0; transform: translateY(-4px); } }
+@media (prefers-reduced-motion: reduce) { .bb-cell { transition: none; } .ms-pos.bb-new { animation: none; } }
