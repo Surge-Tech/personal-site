@@ -4,17 +4,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>The Last Stone</title>
-  <link rel="stylesheet" href="style.css?v=82259c74">
+  <link rel="stylesheet" href="style.css?v=b5bb8f41">
 </head>
 <body>
   <nav class="journey" aria-label="Scenes">
     <div class="journey-inner">
-      <a href="#s0"><b>0</b><span>The hustle</span></a>
-      <a href="#s1"><b>1</b><span>Shrink it</span></a>
-      <a href="#s2"><b>2</b><span>The microscope</span></a>
+      <a href="#s0"><b>0</b><span>Basic Nim</span></a>
+      <a href="#s1"><b>1</b><span>Advanced Nim</span></a>
+      <a href="#s2"><b>2</b><span>Build the bot</span></a>
       <a href="#s3"><b>3</b><span>The crack</span></a>
       <a href="#s4"><b>4</b><span>Revenge</span></a>
-      <a href="#s5"><b>5</b><span>Break the rules</span></a>
+      <a href="#s5"><b>5</b><span>Extension</span></a>
       <a href="#s6"><b>6</b><span>The classroom</span></a>
       <a href="#why"><b>A</b><span>Why it works</span></a>
     </div>
@@ -23,27 +23,19 @@
   <main>
     <header>
       <h1>The Last Stone</h1>
-      <p class="sub">A game that has been beating people since 1940. Lose first. Then work out why.</p>
+      <p class="sub">A game that has been beating people since 1940. Lose first. Then work out why you didn't have to.</p>
+      <p class="muted"><b>What this is:</b> one investigation, start to finish, as a single interactive web page: start with one pile of stones, then move to three rows, build a bot from your own rules and watch it solve every case, find the pattern yourself, then prove it. <b>Built with:</b> plain HTML, CSS and JavaScript, no libraries. The computer's only job is to follow the rules you give it through every position, working backward from the end, so you have data to look at. Spotting the pattern and proving it is yours.</p>
       <p class="muted"><button type="button" class="link" id="enter-present">Presenter mode</button> &middot; big type, one scene at a time, keyboard or clicker</p>
     </header>
 
-    <!-- ===================== 0: the hustle ===================== -->
+    <!-- ===================== 0: basic Nim (one pile) ===================== -->
     <section class="chapter" id="s0" aria-labelledby="h-s0">
       <p class="kicker">Scene 0</p>
-      <h2 id="h-s0">The hustle</h2>
-      <p class="lede">Three rows of stones: 3, 5 and 7. On your turn, take as many as you like from <em>one</em> row. Whoever takes the last stone <b>loses</b>. That's the whole game.</p>
-      <p>One of you plays the bot up front. Everyone else is on their team: shout advice.</p>
-
-      <div class="mn-board" data-default="3,5,7" data-first="human" data-last="loses" data-presets="classic" data-reveal="2losses"></div>
-
-      <p class="bridge" data-after-check="2losses" hidden>In 1940 a machine called the Nimatron played this kind of game at the New York World's Fair. It played about 100,000 games and won about 90% of them, and most of the games it lost were reportedly lost on purpose by the staff, so people would keep lining up. People have been hustling crowds with this game for 85 years. Today you work out how.</p>
-    </section>
-
-    <!-- ===================== 1: shrink it ===================== -->
-    <section class="chapter" id="s1" aria-labelledby="h-s1">
-      <p class="kicker">Scene 1</p>
-      <h2 id="h-s1">Shrink it</h2>
-      <p class="lede">When a problem is too big, solve a smaller one. One pile. Take 1, 2 or 3 stones. For now, whoever takes the last stone <b>wins</b>.</p>
+      <h2 id="h-s0">Basic Nim: one pile</h2>
+      <p class="lede">Start with the simplest version. One pile. On your turn, take 1, 2 or 3 stones. Whoever takes the last stone <b>wins</b>.</p>
+      <p>Play from 16, and you go first. Try a few games. Can you win? If you can't, is it you, or is it the position?</p>
+      <div class="nim-board" data-start="16" data-first="human" data-hide="last,bot"></div>
+      <p>Now work out what's going on.</p>
       <p>Mark every pile size where the player about to move is <b>doomed</b>, however well they play. Start from the end: with 0 stones left it's your move, but the other player just took the last stone, so you've already lost. Then work upward. A size is doomed if every move you have hands your opponent a size that isn't.</p>
 
       <section class="panel"><div class="predict" data-rules="1-3" data-n="24"></div></section>
@@ -60,21 +52,39 @@
         <p>You go first from 15. Fifteen isn't a multiple of 4. What's your first move?</p>
         <div class="nim-board" data-first="human" data-reveal="win" data-hide="last,bot"></div>
 
-        <p class="bridge" data-after-check="win" hidden>One pile: solved. Now back to the three rows.</p>
+        <p class="bridge" data-after-check="win" hidden>Basic Nim: solved. Now the advanced version: three rows, and a twist at the end.</p>
       </div>
     </section>
 
-    <!-- ===================== 2: the microscope ===================== -->
+    <!-- ===================== 1: advanced Nim (three rows) ===================== -->
+    <section class="chapter" id="s1" aria-labelledby="h-s1">
+      <p class="kicker">Scene 1</p>
+      <h2 id="h-s1">Advanced Nim: the hustle</h2>
+      <p class="lede">Now add rows. Three rows of stones: 3, 5 and 7. On your turn, take as many as you like from <em>one</em> row. And one more change: whoever takes the last stone <b>loses</b>.</p>
+      <p>One of you plays the bot up front. Everyone else is on their team: shout advice.</p>
+      <p class="muted">A perfect player is not unbeatable. It wins only when the position lets it. From 3 · 5 · 7 you move first, so a perfect <em>you</em> would win. The bot beats you here because you slip, and you'll find out exactly where.</p>
+
+      <div class="mn-board" data-default="3,5,7" data-first="human" data-last="loses" data-presets="classic" data-reveal="2losses"></div>
+
+      <p class="bridge" data-after-check="2losses" hidden>In 1940 a machine called the Nimatron played this kind of game at the New York World's Fair. It played about 100,000 games against the public and won about 90% of them, and most of the games it lost were reportedly lost on purpose by the staff, so people would keep lining up. People have been hustling crowds with this game for 85 years. Today you work out how.</p>
+    </section>
+
+    <!-- ===================== 2: build the bot ===================== -->
     <section class="chapter" id="s2" aria-labelledby="h-s2">
       <p class="kicker">Scene 2</p>
-      <h2 id="h-s2">The microscope</h2>
-      <p class="lede">Can we work backward on three rows? Each row can be anywhere from empty to full: 4 × 6 × 8 = 192 positions. That's too many for us. It isn't too many for a computer.</p>
-      <p>Press the button. The computer plays out every possible game from every one of those positions and keeps the ones where the player about to move is doomed. (The last stone still loses.)</p>
+      <h2 id="h-s2">Build the bot</h2>
+      <p class="lede">Can we work backward on three rows? Each row can be anywhere from empty to full: 4 × 6 × 8 = 192 positions. That's far too many to check by hand. But you already know the method: you used it on one pile in scene 0.</p>
+      <p>So let's write the method down as rules and hand it to a computer. Fill in every blank together, then press <b>Launch</b> and watch the bot do the tedious part: every position, every move. It follows our rules exactly, even if they're wrong.</p>
 
-      <section class="panel"><div class="microscope" data-start="3,5,7" data-binary="off"></div></section>
+      <section class="panel"><div class="botbuild" data-start="3,5,7"></div></section>
 
       <div data-after-check hidden>
-        <p class="bridge">The computer can tell us <em>which</em> positions are doomed. It can't tell us <em>why</em>. That part is our job.</p>
+        <h3>Play the bot you built</h3>
+        <p>It knows nothing about strategy. All it has is the table it just filled in and rule 5. It goes first from 3 · 5 · 7. If our rules are right, it can't lose from here. If we got something wrong, we can beat it.</p>
+        <p>Beat it? Press <b>Check our rules</b> above to find the broken one, then <b>Change the rules</b> and launch again. Rebuild until it can't be beaten.</p>
+        <div class="mn-board" data-uses="built-bot" data-default="3,5,7" data-presets="built" data-first="bot" data-last="loses"></div>
+        <p class="bridge">The bot can tell us <em>which</em> positions are doomed. It can't tell us <em>why</em>. That part is our job.</p>
+        <p><b>Write a conjecture.</b> Finish this sentence in your own words: "A position is doomed when…". Then test it on positions you haven't looked at, and hunt for one that breaks it.</p>
         <details class="hint">
           <summary>Stuck?</summary>
           <p>Look at 0 · 3 · 3 and 0 · 5 · 5. Then 1 · 2 · 3, 1 · 4 · 5 and 2 · 4 · 6. In each one, the biggest row seems to be built from the other two. Built how?</p>
@@ -87,6 +97,7 @@
       <p class="kicker">Scene 3</p>
       <h2 id="h-s3">The crack</h2>
       <p class="lede">Here are the same 24 doomed positions. Write each row in binary, where every digit stands for a power of 2: 4, 2 and 1. Then count the 1s in each column.</p>
+      <p>Before anything is explained, make a prediction: what do the columns of a doomed position have in common? Write it down. The answer below is a test of your guess, not a replacement for it.</p>
 
       <section class="panel"><div class="microscope" data-start="3,5,7" data-binary="toggle"></div></section>
 
@@ -137,24 +148,24 @@
           <li>Don't explain it right away. Hand someone the game, let them lose, and let them ask. Then teach them how. That second part is the job.</li>
           <li>If you ever lose from a winning position, you slipped. Check the columns, then the twist.</li>
         </ol>
+        <h3>Now flip it</h3>
+        <p>A perfect player can't win from every position, and the code cuts both ways. Here the <em>bot</em> moves first from 1 · 2 · 3, a balanced position. Whatever it does, you can win. Play the code and see.</p>
+        <div class="mn-board" data-default="1,2,3" data-first="bot" data-last="loses" data-columns="live"></div>
+        <p class="muted">So the strategy is not "beat the computer". It is "know which positions are won for whoever moves, and which are lost".</p>
       </div>
     </section>
 
-    <!-- ===================== 5: break the rules ===================== -->
+    <!-- ===================== 5: extension ===================== -->
     <section class="chapter" id="s5" aria-labelledby="h-s5">
-      <p class="kicker">Scene 5</p>
+      <p class="kicker">Optional extension</p>
       <h2 id="h-s5">Break the rules</h2>
-      <p class="lede">You've beaten the game. Now change it. Pick a rule, or make up your own, and the computer will solve the new game.</p>
-      <p>Predict first. Tap every row size you think is <b>doomed</b> for the player about to move, then press <b>Solve</b> and watch the computer work its way up from 0, the same way you did with one pile.</p>
+      <p class="lede">One question to push on, if you want more: <em>does the pattern from scene 0 survive when the allowed moves change?</em> Here you may take 1 or 4 stones. In scene 0, with "take 1, 2 or 3", the doomed sizes were the multiples of 4.</p>
+      <p>Predict first. Tap every row size you think is <b>doomed</b> for the player about to move, then press <b>Solve</b> and watch the computer work its way up from 0, the same way you did with one pile. Change the rule only after you can explain this one.</p>
 
       <section class="panel"><div class="rulelab" data-n="36" data-rule="1,4"></div></section>
 
       <div data-after-check hidden>
-        <h3>The numbers in the corners</h3>
-        <p>Turn on <b>Show Nim values</b>. Each row size gets a number: the size of the ordinary Nim row it secretly behaves like. To judge several rows at once, write those numbers in binary and check the columns, exactly as in scene 3. That is the Sprague–Grundy theorem (1930s): <em>every</em> game where both players have the same moves and nobody can draw is Nim in disguise.</p>
-        <h3>Where the computer runs out</h3>
-        <p>Try <b>Split a row into two unequal rows</b>. That is Grundy's game. For small sizes the pattern looks like it repeats every 3, then it stops. Computers have worked out its values for enormous rows, and nobody knows whether it ever repeats. The computer can find a pattern. Only a proof can promise it lasts.</p>
-        <p class="bridge">Your turn: find a rule whose pattern surprises you, then try to explain it.</p>
+        <p class="bridge">The computer can find a pattern in any rule you give it. Only a proof can promise it lasts, and the proof from scene 3 is the model for it.</p>
       </div>
     </section>
 
@@ -175,10 +186,9 @@
 
       <h3>What the computer did</h3>
       <ul class="plain">
-        <li><b>Opponent:</b> it played perfectly, so losing was honest.</li>
-        <li><b>Microscope:</b> it checked 192 positions so you could look for the pattern.</li>
-        <li><b>Lab:</b> it solved any rule you invented, in seconds.</li>
-        <li><b>Frontier:</b> it went further than any person can, and still couldn't promise Grundy's game a pattern.</li>
+        <li><b>Opponent:</b> it played perfectly, so it beat you only when you slipped, and lost when you played the code.</li>
+        <li><b>The bot you built:</b> it followed your five rules through all 192 positions and 951 moves, the tedious part, so you could look for the pattern.</li>
+        <li><b>Lab (optional):</b> it solved a changed rule in seconds, but couldn't say why the pattern holds. That part stays human.</li>
       </ul>
 
       <p class="bridge">The dare: go hustle someone this week. Then teach them how.</p>
@@ -231,7 +241,8 @@
   <script src="misere.js?v=514e05f3"></script>
   <script src="binary.js?v=24928403"></script>
   <script src="nim-ui.js?v=40cf1c0f"></script>
-  <script src="multinim-ui.js?v=244b236b"></script>
+  <script src="multinim-ui.js?v=862fef6e"></script>
+  <script src="botbuild.js?v=85e967e9"></script>
   <script src="microscope.js?v=4c46e24b"></script>
   <script src="pairing.js?v=21dfe612"></script>
   <script src="predict.js?v=c3cec1bd"></script>
@@ -241,6 +252,6 @@
   <script src="tree-ui.js?v=e74408a6"></script>
   <script src="journey.js?v=3f67615c"></script>
   <script src="presenter.js?v=64f53eb9"></script>
-  <script src="demo.js?v=e1c3919a"></script>
+  <script src="demo.js?v=89e357ab"></script>
 </body>
 </html>

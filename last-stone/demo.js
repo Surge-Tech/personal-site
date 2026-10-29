@@ -4,10 +4,10 @@
 //
 //   Demo.go("s3")                      jump to a scene (enters presenter mode if needed)
 //   Demo.setup("s6", {first:"human"})  reconfigure a board
-//   Demo.line("s0", [2, 1, 3])         play a list of human moves (a number on one-pile boards, [row, take] on multi-row boards)
-//   Demo.perfect("s1")                 play the human side perfectly until the game ends
-//   Demo.mark("s1", [4, 8, 12]); Demo.check("s1"); Demo.show("s1")      the predict strip
-//   Demo.handshake("s1", [1, 3, 2, 2]) the pairing widget
+//   Demo.line("s1", [2, 1, 3])         play a list of human moves (a number on one-pile boards, [row, take] on multi-row boards)
+//   Demo.perfect("s0")                 play the human side perfectly until the game ends
+//   Demo.mark("s0", [4, 8, 12]); Demo.check("s0"); Demo.show("s0")      the predict strip
+//   Demo.handshake("s0", [1, 3, 2, 2]) the pairing widget
 //   Demo.lab([4, 5, 6]); Demo.labMove()   the binary lab
 //   Demo.scan("s2", false); Demo.binary("s3")   the microscope: check all 192 positions, then show them in binary
 //   Demo.rules("1,4", {mark: [2, 5]}); Demo.ruleSolve(); Demo.ruleRows([3, 5, 7])   the rule lab ("L" scene)
@@ -140,7 +140,11 @@
     ruleSolve(instant = false) { Demo.ruleLab().solve(instant); },       // animated by default: the room watches it work upward
     ruleRows(rows) { return Demo.ruleLab().rows(rows); },
 
-    // The microscope (scenes 2 and 3): every position inside 3 · 5 · 7, and the doomed ones.
+    // Build the bot (scene 2): fill the blanks, launch, watch it check every position. Pass false to watch it run.
+    builder(id = "s2") { const el = scene(id).querySelector(".botbuild"); if (!el || !el.botbuild) throw new Error(`no bot builder in ${id}`); return el.botbuild; },
+    build(id = "s2", instant = true) { const b = Demo.builder(id); b.fill(); return b.launch(instant); },
+
+    // The microscope (scene 3): every position inside 3 · 5 · 7, and the doomed ones.
     microscope(id) { const el = scene(id).querySelector(".microscope"); if (!el || !el.microscope) throw new Error(`no microscope in ${id}`); return el.microscope; },
     scan(id, instant = true) { Demo.microscope(id).run(instant); },        // pass false to let the room watch it count
     binary(id, on = true) { Demo.microscope(id).binary(on); },
@@ -152,56 +156,83 @@
       const guard = async (name, fn) => { try { await fn(); } catch (e) { check(name, false, e.message); } };
       const hiddenIn = (id) => [...scene(id).querySelectorAll("[data-after-check]")].filter((n) => n.hidden).length;
 
-      Demo.go("s0");
+      Demo.go("s1");
       await guard("D1 hustle", async () => {
         // a careless volunteer who goes first still loses to the perfect bot
-        Demo.setup("s0", { start: "3,5,7", first: "human", last: "loses", bot: 0 });
-        const before = hiddenIn("s0");
-        let s = await Demo.line("s0", [[2, 3], [1, 2], [0, 1], [2, 1], [1, 1], [0, 1], [2, 1], [1, 1], [0, 1]], { pause: 150, beat: 120 });
+        Demo.setup("s1", { start: "3,5,7", first: "human", last: "loses", bot: 0 });
+        const before = hiddenIn("s1");
+        let s = await Demo.line("s1", [[2, 3], [1, 2], [0, 1], [2, 1], [1, 1], [0, 1], [2, 1], [1, 1], [0, 1]], { pause: 150, beat: 120 });
         check("D1 hustle: game 1, the bot beats a careless volunteer", s.turn === "over" && /Bot wins/.test(s.status), s.status);
         // game 2: bot first, held for the presenter; press B and check its opening
-        Demo.setup("s0", { start: "3,5,7", first: "bot", last: "loses", bot: 0 });
+        Demo.setup("s1", { start: "3,5,7", first: "bot", last: "loses", bot: 0 });
         await sleep(100);
         Demo.botMove();
         await sleep(700);
-        const rows = Demo.state("s0").rows;
+        const rows = Demo.state("s1").rows;
         const taken = [3 - rows[0], 5 - rows[1], 7 - rows[2]];
         check("D1 hustle: game 2, the bot opens by taking exactly 1 from one row", taken.filter((t) => t === 1).length === 1 && taken.filter((t) => t === 0).length === 2, rows.join(","));
-        s = await Demo.line("s0", [[0, 2], [1, 1], [2, 1], [0, 1], [1, 1], [2, 1], [1, 1], [2, 1], [1, 1], [2, 1]], { pause: 150, beat: 120 });
+        s = await Demo.line("s1", [[0, 2], [1, 1], [2, 1], [0, 1], [1, 1], [2, 1], [1, 1], [2, 1], [1, 1], [2, 1]], { pause: 150, beat: 120 });
         check("D1 hustle: game 2, the bot wins again", s.turn === "over" && /Bot wins/.test(s.status), s.status);
-        check("D1 hustle: the Nimatron line appears after two losses", hiddenIn("s0") < before, `hidden ${before} -> ${hiddenIn("s0")}`);
+        check("D1 hustle: the Nimatron line appears after two losses", hiddenIn("s1") < before, `hidden ${before} -> ${hiddenIn("s1")}`);
       });
 
-      Demo.go("s1");
+      Demo.go("s0");
       await guard("D2 predict", async () => {
-        check("D2 hidden before the guess", hiddenIn("s1") >= 2, hiddenIn("s1"));
-        Demo.mark("s1", [4, 8, 9]); Demo.check("s1");
-        const st = Demo.strip("s1").state();
+        check("D2 hidden before the guess", hiddenIn("s0") >= 2, hiddenIn("s0"));
+        Demo.mark("s0", [4, 8, 9]); Demo.check("s0");
+        const st = Demo.strip("s0").state();
         check("D2 predict: graded (2 right, 1 wrong)", st.checked && st.guess.length === 3, JSON.stringify(st.guess));
-        check("D2 predict: explanation revealed", hiddenIn("s1") <= 1, hiddenIn("s1"));   // the 'win'-staged line is still hidden
-        Demo.clear("s1"); Demo.mark("s1", [4, 8, 12, 16, 20, 24]); Demo.check("s1");
-        check("D2 predict: perfect answer", /All correct/.test(document.querySelector("#s1 .predict .tree-explain").textContent), document.querySelector("#s1 .predict .tree-explain").textContent);
+        check("D2 predict: explanation revealed", hiddenIn("s0") <= 1, hiddenIn("s0"));   // the 'win'-staged line is still hidden
+        Demo.clear("s0"); Demo.mark("s0", [4, 8, 12, 16, 20, 24]); Demo.check("s0");
+        check("D2 predict: perfect answer", /All correct/.test(document.querySelector("#s0 .predict .tree-explain").textContent), document.querySelector("#s0 .predict .tree-explain").textContent);
       });
       await guard("D3 handshake", async () => {
-        const st = await Demo.handshake("s1", [1, 3, 2, 2]);
+        const st = await Demo.handshake("s0", [1, 3, 2, 2]);
         check("D3 handshake: four rounds, code takes last", st.round === 4, JSON.stringify(st));
-        check("D3 handshake: four sums shown", document.querySelectorAll("#s1 .pgroup.done").length === 4, document.querySelectorAll("#s1 .pgroup.done").length);
+        check("D3 handshake: four sums shown", document.querySelectorAll("#s0 .pgroup.done").length === 4, document.querySelectorAll("#s0 .pgroup.done").length);
       });
       await guard("D4 win from 15", async () => {
-        const s = await Demo.perfect("s1", { pause: 150, beat: 120 });
+        const s = await Demo.perfect("s0", { board: 2, pause: 150, beat: 120 });
         check("D4 win from 15: you win", /You win/.test(s.status), s.status);
-        check("D4 win from 15: bridge appears", hiddenIn("s1") === 0, hiddenIn("s1"));
+        check("D4 win from 15: bridge appears", hiddenIn("s0") === 0, hiddenIn("s0"));
       });
 
       Demo.go("s2");
-      await guard("D5 microscope", async () => {
+      await guard("D5 build the bot", async () => {
         const hid = hiddenIn("s2");
-        Demo.scan("s2", false);
-        await sleep(2600);                                          // 192 positions, 4 per 40 ms
-        const st = Demo.microscope("s2").state();
-        check("D5 microscope: all 192 checked, 24 doomed", st.checked === 192 && st.doomed.length === 24 && st.shown === 24, `${st.checked} / ${st.shown}`);
-        check("D5 microscope: starts 0·0·1, 0·1·0, 0·2·2, 0·3·3", st.doomed.slice(0, 4).join(" ") === "0,0,1 0,1,0 0,2,2 0,3,3", st.doomed.slice(0, 4).join(" "));
-        check("D5 microscope: the bridge appears after the scan", hiddenIn("s2") < hid, `${hid} -> ${hiddenIn("s2")}`);
+        const b = Demo.builder("s2");
+        check("D5 build: launch refused with blanks empty", b.launch() === false && /Fill in every blank/.test(b.state().message), b.state().message);
+        // a wrong bot launches too, and loses where the right one can't
+        b.pick("end", "won"); b.pick("winQ", "some"); b.pick("winT", "doomed"); b.pick("loseQ", "every"); b.pick("loseT", "winning"); b.pick("order", "most"); b.pick("play", "doomed");
+        check("D5 build: wrong rules launch anyway", b.launch(true) === true && b.state().done, b.state().message);
+        check("D5 build: the wrong bot can't decide most positions", b.state().unknown > 100, b.state().unknown);
+        let wb = Demo.board("s2");
+        wb.setup({ start: "2,4,6", first: "human" });
+        const line = [];
+        for (let k = 0; k < 20 && wb.state().turn !== "over"; k++) {
+          if (wb.state().turn === "human") { const m = Misere.bruteMove(wb.state().piles) || MultiNim.legalMoves(wb.state().piles)[0]; line.push(m); await Demo.line("s2", [[m.pile, m.take]], { pause: 150, beat: 120 }); }
+          else await sleep(200);
+        }
+        check("D5 build: we beat the wrong bot from 2 · 4 · 6", /You win/.test(wb.state().turn === "over" ? wb.root.querySelector('[data-r="status"]').textContent : ""), wb.root.querySelector('[data-r="status"]').textContent);
+        b.checkRules();
+        check("D5 build: Check our rules finds rule 4", /rule 4/.test(b.state().message) && b.state().wrong.join() === "order", b.state().message);
+        b.editRules();
+        b.fill();
+        check("D5 build: the right rules launch", b.launch(false) === true && b.state().wrong.length === 0, b.state().message);
+        await sleep(1500);
+        const mid = b.state();
+        check("D5 build: the run is live, not instant", mid.checked > 0 && mid.checked < mid.total, `${mid.checked} / ${mid.total}`);
+        b.finish();
+        const st = b.state();
+        check("D5 build: all 192 checked, 24 doomed, 951 moves", st.done && st.checked === 192 && st.doomed.length === 24 && st.moves === 951, `${st.checked} / ${st.doomed.length} / ${st.moves}`);
+        check("D5 build: the doomed list matches the brute-force solver", st.doomed.every((k) => !Misere.isWinningBrute(k.split(",").map(Number))), "");
+        check("D5 build: the explanation appears after the run", hiddenIn("s2") < hid, `${hid} -> ${hiddenIn("s2")}`);
+        const board = Demo.board("s2");
+        check("D5 build: the board plays the bot we built", board.root.querySelector('[data-r="bot"]').closest("label").hidden, "");
+        board.setup({ start: "2,4,6", first: "human" });
+        await Demo.line("s2", [[2, 1]], { pause: 150, beat: 120 });   // 2 · 4 · 5: the built bot should hand back a doomed position
+        const after = board.state().piles;
+        check("D5 build: the built bot answers with a doomed position", !Misere.isWinningBrute(after), after.join(","));
       });
 
       Demo.go("s3");
