@@ -272,38 +272,12 @@
         check("D7 revenge: the code card is visible", !document.querySelector("#s4 .codecard").hidden, "");
       });
 
-      Demo.go("s5");
-      await guard("D8 rule lab", async () => {
-        const hid = hiddenIn("s5");
-        let st = Demo.rules("1,4", { mark: [2, 5] });
-        Demo.ruleSolve();
-        await sleep(3200);                                       // the animated solve takes about 2.5 s for 36 sizes
-        st = Demo.ruleLab().state();
-        check("D8 take 1 or 4: animated solve finishes", st.solved, JSON.stringify(st));
-        check("D8 take 1 or 4: doomed 0, 2, 5, 7, 10, 12", st.losing.slice(0, 6).join(",") === "0,2,5,7,10,12", st.losing.join(","));
-        check("D8 take 1 or 4: repeats every 5, proven", st.pattern.period === 5 && st.proof === "proven", st.text);
-        check("D8 explanation revealed after a solve", hiddenIn("s5") < hid, `${hid} -> ${hiddenIn("s5")}`);
-        st = Demo.rules([1, 2], { loses: true, solve: true });
-        check("D8 own rule take 1 or 2, last loses: 1, 4, 7", st.losing.slice(0, 3).join(",") === "1,4,7" && st.misere, st.losing.join(","));
-        st = Demo.rules("kayles", { solve: true });
-        check("D8 Kayles: every 12 from 71, proven", st.pattern.period === 12 && st.pattern.pre === 71 && st.proof === "proven", st.text);
-        const rows = Demo.ruleRows([3, 5, 7]);
-        check("D8 Kayles rows 3, 5, 7 act like 3, 4, 2", /3 acts like 3 .*5 acts like 4 .*7 acts like 2 .*Combined: 101\. Not balanced/.test(rows), rows);
-        st = Demo.rules("grundy", { solve: true });
-        check("D8 Grundy's game: no repeat, not proven", st.pattern === null && st.proof === "none" && /No repeat/.test(st.text), st.text);
-        Demo.rules("1,4");                                       // leave it ready for the talk
-      });
 
       Demo.go("s6");
       await guard("D9 classroom", async () => {
         check("D9 the dare is on screen", /hustle someone this week/.test(scene("s6").textContent), "");
       });
 
-      Demo.go("why");
-      await guard("D10 proof", async () => {
-        document.getElementById("tree-all").click();
-        check("D10 proof: tree drawn", document.querySelectorAll("#tree-svg .tn").length > 20, document.querySelectorAll("#tree-svg .tn").length);
-      });
 
       const failed = results.filter((r) => !r.ok);
       return { passed: results.length - failed.length, failed: failed.length, failures: failed, all: results };
