@@ -10,7 +10,7 @@
 //   el.dispatchEvent(new CustomEvent("attempted", { bubbles: true, detail: { stage: "win" } }))
 // An event with no stage (a checked guess) reveals only the unstaged items. The presenter's R key reveals everything.
 (function () {
-  const chapters = [...document.querySelectorAll(".chapter:not([hidden])")];
+  const chapters = [...document.querySelectorAll(".chapter")];
   const links = [...document.querySelectorAll(".journey a")];
 
   let ticking = false;

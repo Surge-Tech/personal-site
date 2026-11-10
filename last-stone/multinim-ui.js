@@ -7,6 +7,7 @@
 //   data-bot="0"|"0.3"        0 = perfect bot, 0.3 = slips 30% of the time
 //   data-presets="classic"|"endgame"   which starting positions the picker offers
 //   data-reveal="2losses"|"win"|"game"  when to tell journey.js a real attempt was made (reveals data-after-check)
+//   data-uses="built-bot"     the bot is the one the room builds in scene 2 (botbuild.js calls api.useBot)
 //   data-columns="live"       show the rows in binary under the board, plus a "show the winning move" hint
 //                             (with the last stone losing, also a card showing which step of the code you are in)
 // Boards that should not give the game away simply leave data-columns off.
@@ -18,6 +19,8 @@
   const PRESETS = {
     classic: [["3,5,7", "3 · 5 · 7"], ["3,4,5", "3 · 4 · 5"], ["1,3,5,7", "1 · 3 · 5 · 7"], ["2,2", "2 · 2"], ["1,2,3", "1 · 2 · 3"]],
     endgame: [["4,1", "4 · 1"], ["5,1,1", "5 · 1 · 1"], ["3,1,1,1", "3 · 1 · 1 · 1"], ["6,1,1,1", "6 · 1 · 1 · 1"]],
+    // positions inside 3 · 5 · 7 only: the bot built in scene 2 has a table for those and nothing else
+    built: [["3,5,7", "3 · 5 · 7"], ["3,4,5", "3 · 4 · 5"], ["1,2,3", "1 · 2 · 3"], ["2,4,6", "2 · 4 · 6"]],
   };
 
   // Hover doesn't exist on touch screens, so there the first tap previews a take and the second confirms it.
@@ -77,6 +80,7 @@
     R.last.value = cfg.last;
     R.bot.value = cfg.bot;
 
+    let customBot = null;                      // set by api.useBot (botbuild.js): replaces the built-in bot
     let g;                                     // { piles, misere, turn: "human"|"bot"|"animating"|"over", bot, timer, sel, hint }
     const tally = { win: 0, loss: 0 };
     let rows = [];                             // rows[p] = stone buttons of row p (for previews)
@@ -93,7 +97,7 @@
         piles: R.start.value.split(",").map(Number),
         misere,
         turn: R.first.value,
-        bot: misere ? Misere.createBot(Math.random, rate) : MultiNim.createBot(Math.random, rate),
+        bot: customBot || (misere ? Misere.createBot(Math.random, rate) : MultiNim.createBot(Math.random, rate)),
         timer: null, sel: null, hint: null,
       };
       R.rule.textContent = misere ? "Rule: whoever takes the last stone loses." : "Rule: whoever takes the last stone wins.";
@@ -275,6 +279,12 @@
         // last-stone rule again, and wiping the volunteer's first loss there would keep the Nimatron line hidden.
         if (o.last && o.last !== R.last.value) { R.last.value = o.last; tally.win = 0; tally.loss = 0; }
         if (o.bot !== undefined) R.bot.value = String(o.bot);
+        newGame();
+      },
+      // Play with someone else's bot ({ choose(piles) }), e.g. the one built in scene 2. The bot picker hides.
+      useBot(bot) {
+        customBot = bot || null;
+        R.bot.closest("label").hidden = !!customBot;
         newGame();
       },
     };

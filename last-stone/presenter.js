@@ -18,7 +18,7 @@
 (function () {
   const body = document.body;
   const root = document.documentElement;
-  const scenes = [...document.querySelectorAll(".chapter:not(.next):not([hidden])")];
+  const scenes = [...document.querySelectorAll(".chapter:not(.next)")];
   if (scenes.length === 0) return;
 
   // ---------- tiny persistence (works without localStorage) ----------
